@@ -68,20 +68,32 @@ public class ListadoTumbasFragment extends Fragment {
 
         Backendless.Persistence.of(Grab.class).find(dataQuery, new AsyncCallback<BackendlessCollection<Grab>>() {
 
+            private int offset = 0;
+            private boolean firstResponse = true;
 
 
             @Override
             public void handleResponse(BackendlessCollection<Grab> listaGrabBack) {
-                Log.i("MENSAJES",  "En total hay " + listaGrabBack.getTotalObjects() + " tumbas en la lista");
-                Log.i("MENSAJES",  "Obtenidas " + listaGrabBack.getCurrentPage().size() + " tumbas en la lista");
+
+                if(firstResponse){
+                    Log.i("MENSAJES",  "En total hay " + listaGrabBack.getTotalObjects() + " tumbas en la lista");
+                    firstResponse = false;
+                }
+
+                int size = listaGrabBack.getCurrentPage().size();
+                Log.i("MENSAJES",  "Obtenidas " + size + " tumbas en la lista");
+
+                if (size>0){
+                    offset+= listaGrabBack.getCurrentPage().size();
+                    listaGrabBack.getPage(PAGESIZE,offset,this);
+
+                    for (Grab tl  : listaGrabBack.getCurrentPage()){
+                        mListaTumbas.add(tl);
+                        Log.i("MENSAJES", "Encontrada la tumba " + tl.getIdGrab());
+                    }
+                }
                listaGrabBack.getCurrentPage();
 
-                for (Grab tl  : listaGrabBack.getCurrentPage()){
-
-                    mListaTumbas.add(tl);
-
-                    Log.i("MENSAJES", "Encontrada la tumba " + tl.getIdGrab());
-                }
                 mListViewTumbas.setAdapter(new AdaptadorTumbas());
 
             }
