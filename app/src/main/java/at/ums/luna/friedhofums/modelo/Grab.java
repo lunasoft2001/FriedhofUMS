@@ -17,6 +17,24 @@ public class Grab {
     private String telefon1;
     private String telefon2;
 
+    public Grab(){};
+
+    public Grab(String idGrab, String grabname, String friedhof, String feld, String reihe, String nummer,
+                String kunde, String grabart, String bemerkung, String telefon1, String telefon2){
+        this.idGrab = idGrab;
+        this.grabname = grabname;
+        this.friedhof = friedhof;
+        this.feld = feld;
+        this.reihe = reihe;
+        this.nummer = nummer;
+        this.kunde = kunde;
+        this.grabart = grabart;
+        this.bemerkung = bemerkung;
+        this.telefon1 = telefon1;
+        this.telefon2 = telefon2;
+    }
+
+
     public String getIdGrab() {
         return idGrab;
     }

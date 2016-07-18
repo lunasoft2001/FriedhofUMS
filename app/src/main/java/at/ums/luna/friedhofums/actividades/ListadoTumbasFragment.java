@@ -18,6 +18,8 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.persistence.QueryOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,7 @@ public class ListadoTumbasFragment extends Fragment {
 
     private ListView mListViewTumbas;
     private List<Grab> mListaTumbas;
+
     private Context esteContexto;
 
     public ListadoTumbasFragment() {
@@ -48,25 +51,46 @@ public class ListadoTumbasFragment extends Fragment {
 
         mListViewTumbas = (ListView) viewFragmento.findViewById(R.id.miListView);
 
+        return obtenerListadoTumbas(viewFragmento);
+
+    }
+
+    private View obtenerListadoTumbas(View viewFragmento) {
         mListaTumbas = new ArrayList<>();
 
-        Backendless.Persistence.of( Grab.class).find(new AsyncCallback<BackendlessCollection<Grab>>() {
-            @Override
-            public void handleResponse(BackendlessCollection<Grab> listaTumbasBack) {
-                Log.i("MENSAJES", "Obtenidas " + listaTumbasBack.getCurrentPage().size() + " tumbas en la lista");
+        final int PAGESIZE = 100;
+        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+        QueryOptions queryOptions = new QueryOptions();
+        queryOptions.setPageSize(PAGESIZE);
+        queryOptions.addSortByOption("idGrab ASC");
+        dataQuery.setQueryOptions(queryOptions);
 
-                for(Grab tl : listaTumbasBack.getCurrentPage()){
+
+        Backendless.Persistence.of(Grab.class).find(dataQuery, new AsyncCallback<BackendlessCollection<Grab>>() {
+
+
+
+            @Override
+            public void handleResponse(BackendlessCollection<Grab> listaGrabBack) {
+                Log.i("MENSAJES",  "En total hay " + listaGrabBack.getTotalObjects() + " tumbas en la lista");
+                Log.i("MENSAJES",  "Obtenidas " + listaGrabBack.getCurrentPage().size() + " tumbas en la lista");
+               listaGrabBack.getCurrentPage();
+
+                for (Grab tl  : listaGrabBack.getCurrentPage()){
+
                     mListaTumbas.add(tl);
-                    Log.i("MENSAJES", "Encontrado el evento " + tl.getIdGrab());
+
+                    Log.i("MENSAJES", "Encontrada la tumba " + tl.getIdGrab());
                 }
+                mListViewTumbas.setAdapter(new AdaptadorTumbas());
+
             }
 
             @Override
             public void handleFault(BackendlessFault backendlessFault) {
                 Log.i("MENSAJES","Error num " + backendlessFault.getCode());
-                // an error has occurred, the error code can be retrieved with fault.getCode()
-
             }
+
         });
 
 
@@ -77,7 +101,6 @@ public class ListadoTumbasFragment extends Fragment {
                 Toast.makeText(esteContexto, tumbaPresionada.getGrabname().toString(), Toast.LENGTH_LONG).show();
             }
         });
-
 
         return viewFragmento;
     }
@@ -106,7 +129,7 @@ public class ListadoTumbasFragment extends Fragment {
             Grab nuevaTumba = mListaTumbas.get(position);
 
             TextView tvFila = (TextView) filaView.findViewById(R.id.textView);
-            tvFila.setText(nuevaTumba.getGrabname());
+            tvFila.setText(nuevaTumba.getIdGrab());
 
             return filaView;
         }
