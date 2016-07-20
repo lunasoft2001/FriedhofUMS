@@ -1,5 +1,10 @@
 package at.ums.luna.friedhofums.modelo;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
+import at.ums.luna.friedhofums.R;
+
 /**
  * Created by luna-aleixos on 15.07.2016.
  */
@@ -16,11 +21,14 @@ public class Grab {
     private String bemerkung;
     private String telefon1;
     private String telefon2;
+    private double latitud;
+    private double longitud;
 
     public Grab(){};
 
     public Grab(String idGrab, String grabname, String friedhof, String feld, String reihe, String nummer,
-                String kunde, String grabart, String bemerkung, String telefon1, String telefon2){
+                String kunde, String grabart, String bemerkung, String telefon1, String telefon2,
+                double latitud, double longitud){
         this.idGrab = idGrab;
         this.grabname = grabname;
         this.friedhof = friedhof;
@@ -32,6 +40,8 @@ public class Grab {
         this.bemerkung = bemerkung;
         this.telefon1 = telefon1;
         this.telefon2 = telefon2;
+        this.latitud = latitud;
+        this.longitud = longitud;
     }
 
 
@@ -123,6 +133,44 @@ public class Grab {
         this.telefon2 = telefon2;
     }
 
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
+    }
+
+    public BitmapDescriptor iconoDeTumba(){
+        BitmapDescriptor icono;
+        switch (grabart){
+            case "Einzelgrab":
+                icono = BitmapDescriptorFactory.fromResource(R.drawable.grab_normal);
+                break;
+            case "Doppelgrab":
+                icono = BitmapDescriptorFactory.fromResource(R.drawable.grab_doble);
+                break;
+            case "Urnengrab":
+                icono = BitmapDescriptorFactory.fromResource(R.drawable.grab_urne);
+                break;
+            case "Kindergrab":
+                icono = BitmapDescriptorFactory.fromResource(R.drawable.grab_bebe);
+                break;
+            default:
+                icono = BitmapDescriptorFactory.fromResource(R.drawable.grab_vacia);
+                break;
+        }
+
+        return icono;
+    }
 }
 
 

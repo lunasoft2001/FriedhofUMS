@@ -7,6 +7,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
+
 import at.ums.luna.friedhofums.R;
 
 public class ListadoTumbas extends AppCompatActivity {
@@ -51,8 +54,7 @@ public class ListadoTumbas extends AppCompatActivity {
                     f1.setArguments(args);
                     return f1;
                 case 1:
-                    ListadoTumbasFragment f2 = new ListadoTumbasFragment();
-                    f2.setArguments(args);
+                    MapaFragment f2 = new MapaFragment();
                     return f2;
                 default:
                     return null;
@@ -61,7 +63,7 @@ public class ListadoTumbas extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
     }
 }

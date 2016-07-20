@@ -123,12 +123,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:text="----"
+                    android:text="GEO test"
                     android:background="@drawable/borde_imagen_accent"
                     android:elevation="4dp"
                     android:gravity="center"
                     android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="4dp"
+                    android:onClick="mostrarGeoCategorias"/>
 
                 <TextView
                     android:layout_width="match_parent"

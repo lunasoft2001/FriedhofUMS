@@ -1,6 +1,5 @@
 package at.ums.luna.friedhofums.actividades;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -140,8 +139,14 @@ public class ListadoTumbasFragment extends Fragment {
 
             Grab nuevaTumba = mListaTumbas.get(position);
 
-            TextView tvFila = (TextView) filaView.findViewById(R.id.textView);
-            tvFila.setText(nuevaTumba.getIdGrab());
+            TextView tvidGrab = (TextView) filaView.findViewById(R.id.textViewIdGrab);
+            tvidGrab.setText(nuevaTumba.getIdGrab());
+
+            TextView tvGrabname = (TextView) filaView.findViewById(R.id.textViewGrabname);
+            tvGrabname.setText(nuevaTumba.getGrabname());
+
+            TextView tvTlf1 = (TextView) filaView.findViewById(R.id.textViewTelefon1);
+            tvTlf1.setText(nuevaTumba.getTelefon1());
 
             return filaView;
         }

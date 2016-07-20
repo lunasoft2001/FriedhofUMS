@@ -17,18 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-import com.backendless.messaging.DeliveryOptions;
-import com.backendless.messaging.MessageStatus;
-import com.backendless.messaging.PublishOptions;
-import com.backendless.messaging.PushBroadcastMask;
+import com.google.android.gms.maps.model.LatLng;
 
 import at.ums.luna.friedhofums.R;
 import at.ums.luna.friedhofums.actividades.ListadoTumbas;
+import at.ums.luna.friedhofums.actividades.MiPosicion;
 import at.ums.luna.friedhofums.actividades.Preferencias;
-import at.ums.luna.friedhofums.servidor.DefaultCallback;
 import at.ums.luna.friedhofums.servidor.Defaults;
 
 public class MainActivity extends AppCompatActivity {
@@ -122,6 +118,63 @@ public class MainActivity extends AppCompatActivity {
     public void abrirListadoTumbas(View v){
         Intent intento = new Intent(this,ListadoTumbas.class);
         startActivity(intento);
+    }
+
+    public void mostrarGeoCategorias(View v){
+
+    Intent intento = new Intent(this, MiPosicion.class);
+        startActivity(intento);
+
+//          Ver geoCategoria
+// Backendless.Geo.getCategories(new AsyncCallback<List<GeoCategory>>() {
+//            @Override
+//            public void handleResponse(List<GeoCategory> geoCategories) {
+//                Log.i("MENSAJES", "Listado GEO " + geoCategories.get(0).getName());
+//            }
+//
+//            @Override
+//            public void handleFault(BackendlessFault backendlessFault) {
+//
+//            }
+//        });
+
+//        AGREGAR geoPunto
+//        List<String> categoria = new ArrayList<>();
+//                categoria.add("Grab");
+//        Map<String, Object> meta = new HashMap<String, Object>();
+//        meta.put("name", "Lieboch1");
+//
+//        Backendless.Geo.savePoint(46.960998, 15.346689, categoria, meta, new AsyncCallback<GeoPoint>() {
+//            @Override
+//            public void handleResponse(GeoPoint geoPoint) {
+//                Log.i("MENSAJES" , geoPoint.getObjectId());
+//
+//            }
+//
+//            @Override
+//            public void handleFault(BackendlessFault backendlessFault) {
+//
+//            }
+//        });
+
+//        Buscar en Radius
+//        BackendlessGeoQuery query = new BackendlessGeoQuery(46.961036, 15.347048, 5, Units.METERS );
+//        query.addCategory("Grab");
+//
+//        Backendless.Geo.getPoints(query, new AsyncCallback<BackendlessCollection<GeoPoint>>() {
+//            @Override
+//            public void handleResponse(BackendlessCollection<GeoPoint> geoPointBackendlessCollection) {
+//                Log.i("MENSAJES", String.format( "Busqueda en radio: %s", geoPointBackendlessCollection.getCurrentPage()));
+//            }
+//
+//            @Override
+//            public void handleFault(BackendlessFault backendlessFault) {
+//
+//            }
+//        });
+
+
+
     }
 
 }
