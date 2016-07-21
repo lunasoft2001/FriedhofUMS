@@ -39,7 +39,7 @@
     </activity>
     <activity android:name=".actividades.Preferencias">
     </activity>
-    <activity android:name="at.ums.luna.friedhofums.actividades.MiPosicion">
+    <activity android:name=".GPS.MiPosicion">
     </activity>
 
     <meta-data android:name="com.google.android.geo.API_KEY"

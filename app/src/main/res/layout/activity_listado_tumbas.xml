@@ -11,16 +11,45 @@
     tools:context="at.ums.luna.friedhofums.actividades.ListadoTumbas">
 
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:id="@+id/search_layout">
+
+        <SearchView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:queryHint="idGrab"
+            android:iconifiedByDefault="false"
+            android:id="@+id/sv1"/>
+
+        <SearchView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:queryHint="grabname"
+            android:iconifiedByDefault="false"
+            android:id="@+id/sv2"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/sv1"/>
+
+
+</LinearLayout>
+
     <!-- activity_screen_slide.xml -->
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_layout">
 
         <android.support.v4.view.PagerTabStrip
             android:layout_width="fill_parent"
-            android:layout_height="50dp">
+            android:layout_height="40dp">
 
 
         </android.support.v4.view.PagerTabStrip>

@@ -1,4 +1,4 @@
-package at.ums.luna.friedhofums.actividades;
+package at.ums.luna.friedhofums.GPS;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,43 +15,60 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
+import com.backendless.Backendless;
+import com.backendless.BackendlessCollection;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.BackendlessDataQuery;
+import com.google.android.gms.maps.model.LatLng;
+
 import at.ums.luna.friedhofums.R;
+import at.ums.luna.friedhofums.modelo.Grab;
 
 public class MiPosicion extends Activity {
 
     TextView mensaje1;
     TextView mensaje2;
 
+    double miLatitud;
+    double miLongitud;
+
+    Localizacion Local;
+
+    LocationManager mlocManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mi_posicion);
+
         mensaje1 = (TextView) findViewById(R.id.mensaje_id);
         mensaje2 = (TextView) findViewById(R.id.mensaje_id2);
+        busca();
 
-		/* Uso de la clase LocationManager para obtener la localizacion del GPS */
-        LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Localizacion Local = new Localizacion();
+
+    }
+
+    private void busca() {
+    /* Uso de la clase LocationManager para obtener la localizacion del GPS */
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Local = new Localizacion();
         Local.setMiPosicion(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
+
         mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
-                (LocationListener) Local);
+                Local);
 
         mensaje1.setText("Localizacion agregada");
         mensaje2.setText("");
     }
-
 
 
     public void setLocation(Location loc) {
@@ -65,6 +82,7 @@ public class MiPosicion extends Activity {
                     Address DirCalle = list.get(0);
                     mensaje2.setText("Mi direccion es: \n"
                             + DirCalle.getAddressLine(0));
+
                 }
 
             } catch (IOException e) {
@@ -95,6 +113,10 @@ public class MiPosicion extends Activity {
             String Text = "Mi ubicacion actual es: " + "\n Lat = "
                     + loc.getLatitude() + "\n Long = " + loc.getLongitude();
             mensaje1.setText(Text);
+
+            miLatitud = loc.getLatitude();
+            miLongitud = loc.getLongitude();
+
             this.miPosicion.setLocation(loc);
         }
 
@@ -122,5 +144,58 @@ public class MiPosicion extends Activity {
         }
 
     }/* Fin de la clase localizacion */
+
+
+    @Override
+    protected void onPause() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mlocManager.removeUpdates(Local);
+        super.onPause();
+    }
+
+
+    public void guardaCoordenadas(View v){
+
+        String codigoObtenido =  getIntent().getStringExtra("idGrab");
+        String whereClause = "idGrab = '" + codigoObtenido + "'";
+        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+        dataQuery.setWhereClause(whereClause);
+        Backendless.Persistence.of(Grab.class).find(dataQuery, new AsyncCallback<BackendlessCollection<Grab>>() {
+            @Override
+            public void handleResponse(BackendlessCollection<Grab> grabBackendlessCollection) {
+                final Grab tumbaObtenida = grabBackendlessCollection.getCurrentPage().get(0);
+
+                Log.i("MENSAJES", tumbaObtenida.getIdGrab() + " " + tumbaObtenida.getGrabname());
+
+                tumbaObtenida.setLatitud(miLatitud);
+                tumbaObtenida.setLongitud(miLongitud);
+
+                Backendless.Persistence.save(tumbaObtenida, new AsyncCallback<Grab>() {
+                    @Override
+                    public void handleResponse(Grab grab) {
+                        Log.i("MENSAJES", String.format("La tumba %s tiene la posicion %s - %s",
+                                tumbaObtenida.getIdGrab(), tumbaObtenida.getLatitud(),tumbaObtenida.getLongitud()));
+
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault backendlessFault) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault backendlessFault) {
+
+            }
+        });
+
+
+    }
 
 }

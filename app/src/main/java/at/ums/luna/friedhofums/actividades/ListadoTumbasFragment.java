@@ -1,6 +1,7 @@
 package at.ums.luna.friedhofums.actividades;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -23,6 +23,7 @@ import com.backendless.persistence.QueryOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.R;
 import at.ums.luna.friedhofums.modelo.Grab;
 
@@ -88,7 +89,7 @@ public class ListadoTumbasFragment extends Fragment {
 
                     for (Grab tl  : listaGrabBack.getCurrentPage()){
                         mListaTumbas.add(tl);
-                        Log.i("MENSAJES", "Encontrada la tumba " + tl.getIdGrab());
+
                     }
                 }
                listaGrabBack.getCurrentPage();
@@ -109,7 +110,12 @@ public class ListadoTumbasFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Grab tumbaPresionada = mListaTumbas.get(position);
-                Toast.makeText(esteContexto, tumbaPresionada.getGrabname().toString(), Toast.LENGTH_LONG).show();
+
+                //Abre una actividad
+                Intent intento = new Intent(esteContexto, MiPosicion.class);
+                intento.putExtra("idGrab",tumbaPresionada.getIdGrab());
+                startActivity(intento);
+
             }
         });
 

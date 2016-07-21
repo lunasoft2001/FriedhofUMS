@@ -1,29 +1,30 @@
 package at.ums.luna.friedhofums.inicio;
 
-import android.content.DialogInterface;
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-import com.google.android.gms.maps.model.LatLng;
 
 import at.ums.luna.friedhofums.R;
 import at.ums.luna.friedhofums.actividades.ListadoTumbas;
-import at.ums.luna.friedhofums.actividades.MiPosicion;
+import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.actividades.Preferencias;
 import at.ums.luna.friedhofums.servidor.Defaults;
 
@@ -36,10 +37,26 @@ public class MainActivity extends AppCompatActivity {
     private String userActual;
     private String passActual;
 
+    double miLatitud;
+    double miLongitud;
+    Localizacion Local;
+
+    TextView tv1;
+    TextView tv2;
+
+    LocationManager mlocManager;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        tv1 = (TextView)findViewById(R.id.tv1);
+        tv2 = (TextView)findViewById(R.id.tv2);
+
+
 
         //Cargar settings por defecto
         PreferenceManager.setDefaultValues(this,R.xml.settings,false);
@@ -69,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -76,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
         //rellenamos trabajadorActual
         mostrarPreferencias();
+
+        //activa el GPS
+        busca();
 
 
         toolbar.setTitle(String.format(this.getString(R.string.Trabajador), nombreTrabajadorActual));
@@ -91,9 +112,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mlocManager.removeUpdates(Local);
+        Log.i("MENSAJES", "PARANDO GPS");
+        super.onPause();
     }
 
     private void setToolbar(){
@@ -102,6 +128,91 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setLogo(R.mipmap.ic_launcher);
     }
+
+    /*
+    COMIENZA EL BLOQUE DE GPS
+     */
+
+    private void busca() {
+    /* Uso de la clase LocationManager para obtener la localizacion del GPS */
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Local = new Localizacion();
+        Local.setMiPosicion(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+
+        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
+                Local);
+
+        tv1.setText("Localizacion agregada");
+        tv2.setText("");
+    }
+
+    /* Aqui empieza la Clase Localizacion */
+    public class Localizacion implements LocationListener {
+        MainActivity mainActivity;
+
+        public MainActivity getMiPosicion() {
+            return mainActivity;
+        }
+
+        public void setMiPosicion(MainActivity mainActivity) {
+            this.mainActivity = mainActivity;
+        }
+
+        @Override
+        public void onLocationChanged(Location loc) {
+            // Este metodo se ejecuta cada vez que el GPS recibe nuevas coordenadas
+            // debido a la deteccion de un cambio de ubicacion
+
+            loc.getLatitude();
+            loc.getLongitude();
+            String Text = "Lat = " + loc.getLatitude() + " Long = " + loc.getLongitude();
+            tv1.setText(Text);
+            miLatitud = loc.getLatitude();
+            miLongitud = loc.getLongitude();
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            // Este metodo se ejecuta cuando el GPS es desactivado
+            tv1.setText("GPS Desactivado");
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            // Este metodo se ejecuta cuando el GPS es activado
+            tv1.setText("GPS Activado");
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            // Este metodo se ejecuta cada vez que se detecta un cambio en el
+            // status del proveedor de localizacion (GPS)
+            // Los diferentes Status son:
+            // OUT_OF_SERVICE -> Si el proveedor esta fuera de servicio
+            // TEMPORARILY_UNAVAILABLE -> Temporalmente no disponible pero se
+            // espera que este disponible en breve
+            // AVAILABLE -> Disponible
+        }
+
+    }/* Fin de la clase localizacion */
+
+
+
+
+
+
+
+
+
+   /*
+    FINALIZA EL BLOQUE DE GPS
+     */
+
+
 
 
     public void mostrarPreferencias(){
@@ -117,6 +228,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void abrirListadoTumbas(View v){
         Intent intento = new Intent(this,ListadoTumbas.class);
+        intento.putExtra("miLatitud",miLatitud);
+        intento.putExtra("miLongitud", miLongitud);
         startActivity(intento);
     }
 
