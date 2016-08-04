@@ -63,7 +63,7 @@ public class MiPosicion extends Activity {
         }
 
 
-        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
+        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
                 Local);
 
         mensaje1.setText("Localizacion agregada");

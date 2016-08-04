@@ -2,6 +2,7 @@ package at.ums.luna.friedhofums.actividades;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,24 +19,31 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.QueryOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.R;
 import at.ums.luna.friedhofums.modelo.Grab;
+import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapaFragment extends Fragment implements OnMapReadyCallback {
+public class MapaFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
     private GoogleMap mMap;
     double miLatitud;
     double miLongitud;
+    OperacionesBaseDatos db;
+
 
     public static MapaFragment newInstance() {
         MapaFragment fragment = new MapaFragment();
@@ -45,11 +53,13 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_mapa, null, false);
+
 
         miLatitud = getArguments().getDouble("miLatitud");
         miLongitud = getArguments().getDouble("miLongitud");
-
+        db = new OperacionesBaseDatos(getContext());
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -70,95 +80,57 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(miLatitud,miLongitud),20));
+        mMap.setOnMarkerDragListener(this);
 
 
 
-
-            //agregamos las marca
-
-        final int PAGESIZE = 100;
-        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
-        QueryOptions queryOptions = new QueryOptions();
-        queryOptions.setPageSize(PAGESIZE);
-        queryOptions.addSortByOption("idGrab ASC");
-        dataQuery.setQueryOptions(queryOptions);
+        //obtenemos la lista
+        OperacionesBaseDatos db = new OperacionesBaseDatos(this.getContext());
+        List <Grab> listaActual =  db.verListaGrabCompleta();
 
 
-        Backendless.Persistence.of(Grab.class).find(dataQuery, new AsyncCallback<BackendlessCollection<Grab>>() {
-
-            private int offset = 0;
-            private boolean firstResponse = true;
-
-
-            @Override
-            public void handleResponse(BackendlessCollection<Grab> listaGrabBack) {
-
-                if(firstResponse){
-                    Log.i("MENSAJES",  "En total hay " + listaGrabBack.getTotalObjects() + " tumbas en la lista");
-                    firstResponse = false;
-                }
-
-                int size = listaGrabBack.getCurrentPage().size();
-                Log.i("MENSAJES",  "Obtenidas " + size + " tumbas en la lista");
-
-                if (size>0){
-                    offset+= listaGrabBack.getCurrentPage().size();
-                    listaGrabBack.getPage(PAGESIZE,offset,this);
-
-                    for (Grab tl  : listaGrabBack.getCurrentPage()){
-                        double distancia = obtenerDistancia(miLatitud,miLongitud,tl.getLatitud(),tl.getLongitud());
-
-//                        Log.i("MENSAJES", "Distacia hasta " + tl.getIdGrab() + " = " + distancia + " metros");
-
-                        mMap.addMarker(agregarMarca(tl));
-
-                    }
-                }
-                listaGrabBack.getCurrentPage();
-
-            }
-
-            @Override
-            public void handleFault(BackendlessFault backendlessFault) {
-                Log.i("MENSAJES","Error num " + backendlessFault.getCode());
-            }
-
-        });
-
-            //correcto
-//
-//
-//        Backendless.Persistence.of(Grab.class).find( new AsyncCallback<BackendlessCollection<Grab>>() {
-//            @Override
-//            public void handleResponse(BackendlessCollection<Grab> grabBackendlessCollection) {
-//                for(Grab gl : grabBackendlessCollection.getCurrentPage()){
-//
-//                    int distancia = obtenerDistancia(miLatitud,miLongitud,gl.getLatitud(),gl.getLongitud());
-//
-//                    Log.i("MENSAJES", "Distacia hasta " + gl.getIdGrab() + " = " + distancia + " metros");
-//
-//                    mMap.addMarker(agregarMarca(gl));
-//                }
-//            }
-//
-//            @Override
-//            public void handleFault(BackendlessFault backendlessFault) {
-//
-//            }
-//        });
-
-//        LatLng lieboch = new LatLng(46.961007, 15.346874);
-//        mMap.addMarker(new MarkerOptions().position(lieboch).title("Esto es Lieboch"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(lieboch));
+        for (int x= 0; x<listaActual.size();x++ ) {
+            mMap.addMarker(agregarMarca(listaActual.get(x)));
+        }
 
     }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDragEnd(final Marker marker) {
+        //Mueve el marker de una tumba, lo guarda en sqLite y en el servidor
+
+        String codigoObtenido =  marker.getTitle();
+        double nuevaLatitud =  marker.getPosition().latitude;
+        double nuevaLongitud = marker.getPosition().longitude;
+
+        db.actualizaCoordenadasTumba(codigoObtenido,nuevaLatitud,nuevaLongitud);
+
+    }
+
+
+
+
 
     public MarkerOptions agregarMarca(Grab grab){
         MarkerOptions agregar = new MarkerOptions();
 
         agregar.position(new LatLng(grab.getLatitud(), grab.getLongitud()));
-        agregar.title(grab.getIdGrab() + " (" + grab.getGrabname() + ")");
+        agregar.title(grab.getIdGrab());
+        agregar.snippet(grab.getGrabname());
         agregar.icon(grab.iconoDeTumba());
+        agregar.draggable(true);
 
         return agregar;
     }
@@ -176,4 +148,5 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         return (int) (Radius * c);
 
     }
+
 }

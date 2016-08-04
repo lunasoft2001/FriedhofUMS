@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,10 +27,14 @@ import at.ums.luna.friedhofums.R;
 import at.ums.luna.friedhofums.actividades.ListadoTumbas;
 import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.actividades.Preferencias;
+import at.ums.luna.friedhofums.servidor.DBHelper;
 import at.ums.luna.friedhofums.servidor.Defaults;
+import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    private OperacionesBaseDatos operacionesDB;
 
     private Toolbar toolbar;
     private String idTrabajadorActual;
@@ -56,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
         tv1 = (TextView)findViewById(R.id.tv1);
         tv2 = (TextView)findViewById(R.id.tv2);
 
+
+        /**
+         * Declaramos el controlador de la BD y accedemos en modo escritura
+         * Para la base de datos creada desde java
+         */
+        DBHelper bdHelper = new DBHelper(getBaseContext());
+        //SQLiteDatabase db = bdHelper.getWritableDatabase();
 
 
         //Cargar settings por defecto
@@ -200,14 +212,6 @@ public class MainActivity extends AppCompatActivity {
 
     }/* Fin de la clase localizacion */
 
-
-
-
-
-
-
-
-
    /*
     FINALIZA EL BLOQUE DE GPS
      */
@@ -231,6 +235,15 @@ public class MainActivity extends AppCompatActivity {
         intento.putExtra("miLatitud",miLatitud);
         intento.putExtra("miLongitud", miLongitud);
         startActivity(intento);
+    }
+
+
+    public void actualizarTablaGrab(View v){
+        // Llama a Backendless y actualiza la tabla interna
+        operacionesDB = new OperacionesBaseDatos(this);
+        operacionesDB.actualizarGrab(this);
+
+
     }
 
     public void mostrarGeoCategorias(View v){
