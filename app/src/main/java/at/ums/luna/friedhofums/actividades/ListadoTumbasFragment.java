@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.R;
+import at.ums.luna.friedhofums.inicio.SplashActivity;
 import at.ums.luna.friedhofums.modelo.Grab;
 import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 
@@ -35,8 +37,12 @@ public class ListadoTumbasFragment extends Fragment {
 
     private ListView mListViewTumbas;
     private List<Grab> mListaTumbas;
-
     private Context esteContexto;
+
+    private String filtro;
+    private String[] argumentos;
+
+
 
     public ListadoTumbasFragment() {
         // Required empty public constructor
@@ -51,6 +57,9 @@ public class ListadoTumbasFragment extends Fragment {
         View viewFragmento = inflater.inflate(R.layout.fragment_listado_tumbas, container, false);
 
         mListViewTumbas = (ListView) viewFragmento.findViewById(R.id.miListView);
+
+        filtro = getArguments().getString("filtro");
+        argumentos = getArguments().getStringArray("argumentos");
 
         return obtenerListadoTumbas(viewFragmento);
 
@@ -128,7 +137,12 @@ public class ListadoTumbasFragment extends Fragment {
     private View obtenerListadoTumbas(View viewFragmento) {
         mListaTumbas = new ArrayList<>();
         OperacionesBaseDatos db = new OperacionesBaseDatos(esteContexto);
-        mListaTumbas = db.verListaGrabCompleta();
+        // mListaTumbas = db.verListaGrabCompleta();
+
+
+        mListaTumbas = db.verListaGrabFiltrada(filtro,argumentos);
+//        ArrayList lt = getArguments().getStringArrayList("miListadoTumbas");
+//        mListaTumbas = lt;
 
         mListViewTumbas.setAdapter(new AdaptadorTumbas());
 
@@ -136,6 +150,9 @@ public class ListadoTumbasFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Grab tumbaPresionada = mListaTumbas.get(position);
+
+                Toast.makeText(esteContexto, tumbaPresionada.getIdGrab() +
+                    " " + tumbaPresionada.getGrabname(),Toast.LENGTH_SHORT).show();
 
                 //Abre una actividad
                 Intent intento = new Intent(esteContexto, MiPosicion.class);

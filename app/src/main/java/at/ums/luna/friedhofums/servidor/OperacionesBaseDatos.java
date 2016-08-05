@@ -72,9 +72,10 @@ public class OperacionesBaseDatos {
             DBValores.ColumnasGrab.LONGITUD
     };
 
-    public List<Grab> verListaGrabCompleta(){
+    public List<Grab> verListaGrabFiltrada(String filtro, String[] argumentos){
         leer();
-        Cursor cursor = db.query(DBValores.Tablas.GRAB,todasColumnasGrab,null,null,null,null,null);
+
+        Cursor cursor = db.query(DBValores.Tablas.GRAB,todasColumnasGrab,filtro,argumentos,null,null,null,null);
 
         List<Grab> listaGrab = new ArrayList<>();
         while (cursor.moveToNext()){
@@ -114,7 +115,7 @@ public class OperacionesBaseDatos {
 
         cerrar();
 
-        //conecta BAckendless
+        //conecta Backendless
 
         String whereClause = "idGrab = '" + idGrab + "'";
         BackendlessDataQuery dataQuery = new BackendlessDataQuery();
@@ -126,8 +127,6 @@ public class OperacionesBaseDatos {
 
                 Log.i("MENSAJES", tumbaObtenida.getIdGrab() + " " + tumbaObtenida.getGrabname());
 
-//                tumbaObtenida.setLatitud(marker.getPosition().latitude);
-//                tumbaObtenida.setLongitud(marker.getPosition().longitude);
                 tumbaObtenida.setLatitud(miLatitud);
                 tumbaObtenida.setLongitud(miLongitud);
 

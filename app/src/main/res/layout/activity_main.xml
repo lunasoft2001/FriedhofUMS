@@ -124,7 +124,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:text="GEO test"
+                    android:text="Grab mit filter"
                     android:background="@drawable/borde_imagen_accent"
                     android:elevation="4dp"
                     android:gravity="center"

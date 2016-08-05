@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.backendless.Backendless;
@@ -28,11 +29,13 @@ import com.google.android.gms.maps.model.LatLng;
 
 import at.ums.luna.friedhofums.R;
 import at.ums.luna.friedhofums.modelo.Grab;
+import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 
 public class MiPosicion extends Activity {
 
     TextView mensaje1;
     TextView mensaje2;
+    Button botonGuardar;
 
     double miLatitud;
     double miLongitud;
@@ -48,6 +51,7 @@ public class MiPosicion extends Activity {
 
         mensaje1 = (TextView) findViewById(R.id.mensaje_id);
         mensaje2 = (TextView) findViewById(R.id.mensaje_id2);
+        botonGuardar = (Button) findViewById(R.id.botonGuaardaPosicion);
         busca();
 
 
@@ -66,30 +70,10 @@ public class MiPosicion extends Activity {
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
                 Local);
 
-        mensaje1.setText("Localizacion agregada");
+        mensaje1.setText("Buscando localizacion");
         mensaje2.setText("");
     }
 
-
-    public void setLocation(Location loc) {
-        //Obtener la direccion de la calle a partir de la latitud y la longitud
-        if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
-            try {
-                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-                List<Address> list = geocoder.getFromLocation(
-                        loc.getLatitude(), loc.getLongitude(), 1);
-                if (!list.isEmpty()) {
-                    Address DirCalle = list.get(0);
-                    mensaje2.setText("Mi direccion es: \n"
-                            + DirCalle.getAddressLine(0));
-
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     /* Aqui empieza la Clase Localizacion */
     public class Localizacion implements LocationListener {
@@ -110,14 +94,10 @@ public class MiPosicion extends Activity {
 
             loc.getLatitude();
             loc.getLongitude();
-            String Text = "Mi ubicacion actual es: " + "\n Lat = "
-                    + loc.getLatitude() + "\n Long = " + loc.getLongitude();
-            mensaje1.setText(Text);
 
             miLatitud = loc.getLatitude();
             miLongitud = loc.getLongitude();
-
-            this.miPosicion.setLocation(loc);
+            botonGuardar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -159,6 +139,7 @@ public class MiPosicion extends Activity {
 
     public void guardaCoordenadas(View v){
 
+
         String codigoObtenido =  getIntent().getStringExtra("idGrab");
         String whereClause = "idGrab = '" + codigoObtenido + "'";
         BackendlessDataQuery dataQuery = new BackendlessDataQuery();
@@ -195,6 +176,10 @@ public class MiPosicion extends Activity {
             }
         });
 
+        OperacionesBaseDatos db = new OperacionesBaseDatos(this);
+        db.actualizaCoordenadasTumba(codigoObtenido,miLatitud,miLongitud);
+
+        mensaje1.setText("Posicion guardada");
 
     }
 

@@ -24,9 +24,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import at.ums.luna.friedhofums.GPS.MiPosicion;
@@ -42,6 +44,12 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
     private GoogleMap mMap;
     double miLatitud;
     double miLongitud;
+    private List<Grab> mListaTumbas;
+
+    private String filtro;
+    private String[] argumentos;
+
+
     OperacionesBaseDatos db;
 
 
@@ -56,10 +64,19 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
 
         View view = inflater.inflate(R.layout.fragment_mapa, null, false);
 
+        filtro = getArguments().getString("filtro");
+        argumentos = getArguments().getStringArray("argumentos");
 
-        miLatitud = getArguments().getDouble("miLatitud");
-        miLongitud = getArguments().getDouble("miLongitud");
+
+
+//        ArrayList lt = getArguments().getStringArrayList("miListadoTumbas");
+//        mListaTumbas = lt;
         db = new OperacionesBaseDatos(getContext());
+        mListaTumbas = db.verListaGrabFiltrada(filtro, argumentos);
+        //mListaTumbas=  db.verListaGrabCompleta();
+
+        miLatitud = mListaTumbas.get(1).getLatitud();
+        miLongitud = mListaTumbas.get(1).getLongitud();
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -87,12 +104,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
 
 
         //obtenemos la lista
-        OperacionesBaseDatos db = new OperacionesBaseDatos(this.getContext());
-        List <Grab> listaActual =  db.verListaGrabCompleta();
 
-
-        for (int x= 0; x<listaActual.size();x++ ) {
-            mMap.addMarker(agregarMarca(listaActual.get(x)));
+        for (int x= 0; x<mListaTumbas.size();x++ ) {
+            mMap.addMarker(agregarMarca(mListaTumbas.get(x)));
         }
 
     }
