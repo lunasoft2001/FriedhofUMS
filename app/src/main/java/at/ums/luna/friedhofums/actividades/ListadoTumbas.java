@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.google.android.gms.maps.MapFragment;
@@ -29,7 +30,6 @@ public class ListadoTumbas extends AppCompatActivity {
         setContentView(R.layout.activity_listado_tumbas);
 
         MODO = getIntent().getIntExtra("modo",1);
-
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new AdaptadorPager(getSupportFragmentManager()));
@@ -91,4 +91,5 @@ public class ListadoTumbas extends AppCompatActivity {
             return 2;
         }
     }
+
 }

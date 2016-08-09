@@ -67,13 +67,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         filtro = getArguments().getString("filtro");
         argumentos = getArguments().getStringArray("argumentos");
 
-
-
-//        ArrayList lt = getArguments().getStringArrayList("miListadoTumbas");
-//        mListaTumbas = lt;
         db = new OperacionesBaseDatos(getContext());
         mListaTumbas = db.verListaGrabFiltrada(filtro, argumentos);
-        //mListaTumbas=  db.verListaGrabCompleta();
 
         miLatitud = mListaTumbas.get(1).getLatitud();
         miLongitud = mListaTumbas.get(1).getLongitud();

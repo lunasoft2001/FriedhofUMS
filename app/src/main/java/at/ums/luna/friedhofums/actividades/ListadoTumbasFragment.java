@@ -4,14 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -26,23 +25,22 @@ import java.util.List;
 
 import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.R;
-import at.ums.luna.friedhofums.inicio.SplashActivity;
+import at.ums.luna.friedhofums.adaptadores.AdaptadorTumbas;
 import at.ums.luna.friedhofums.modelo.Grab;
 import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ListadoTumbasFragment extends Fragment {
+public class ListadoTumbasFragment extends Fragment implements SearchView.OnQueryTextListener{
 
     private ListView mListViewTumbas;
-    private List<Grab> mListaTumbas;
+    private ArrayList<Grab> mListaTumbas;
     private Context esteContexto;
-
+    private AdaptadorTumbas adaptadorTumbas;
     private String filtro;
     private String[] argumentos;
-
-
+    private SearchView mSearchView;
 
     public ListadoTumbasFragment() {
         // Required empty public constructor
@@ -56,6 +54,7 @@ public class ListadoTumbasFragment extends Fragment {
         esteContexto = getContext();
         View viewFragmento = inflater.inflate(R.layout.fragment_listado_tumbas, container, false);
 
+        mSearchView = (SearchView) viewFragmento.findViewById(R.id.search_view);
         mListViewTumbas = (ListView) viewFragmento.findViewById(R.id.miListView);
 
         filtro = getArguments().getString("filtro");
@@ -64,7 +63,65 @@ public class ListadoTumbasFragment extends Fragment {
         return obtenerListadoTumbas(viewFragmento);
 
     }
-// ----------------------- METODO ANTIGUO DIRECTO AL SERVIDOR
+
+    private View obtenerListadoTumbas(View viewFragmento) {
+        mListaTumbas = new ArrayList<Grab>();
+        OperacionesBaseDatos db = new OperacionesBaseDatos(esteContexto);
+        mListaTumbas =  db.verListaGrabFiltrada(filtro,argumentos);
+
+        adaptadorTumbas = new AdaptadorTumbas(esteContexto,mListaTumbas);
+        mListViewTumbas.setAdapter(adaptadorTumbas);
+
+        mListViewTumbas.setTextFilterEnabled(true);
+
+
+        mListViewTumbas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Grab tumbaPresionada = mListaTumbas.get(position);
+
+                Toast.makeText(esteContexto, tumbaPresionada.getIdGrab() +
+                    " " + tumbaPresionada.getGrabname(),Toast.LENGTH_SHORT).show();
+
+                //Abre una actividad
+                Intent intento = new Intent(esteContexto, MiPosicion.class);
+                intento.putExtra("idGrab",tumbaPresionada.getIdGrab());
+                startActivity(intento);
+
+            }
+        });
+
+        setupSearchView();
+
+        return viewFragmento;
+    }
+
+    private void setupSearchView(){
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setQueryHint("Suchen hear");
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (TextUtils.isEmpty(newText)){
+            mListViewTumbas.clearTextFilter();
+        } else {
+            mListViewTumbas.setFilterText(newText.toString());
+        }
+
+        return true;
+    }
+
+
+
+    // ----------------------- METODO ANTIGUO DIRECTO AL SERVIDOR
 //    private View obtenerListadoTumbas(View viewFragmento) {
 //        mListaTumbas = new ArrayList<>();
 //
@@ -134,71 +191,8 @@ public class ListadoTumbasFragment extends Fragment {
 //    }
 //
 
-    private View obtenerListadoTumbas(View viewFragmento) {
-        mListaTumbas = new ArrayList<>();
-        OperacionesBaseDatos db = new OperacionesBaseDatos(esteContexto);
-        // mListaTumbas = db.verListaGrabCompleta();
 
 
-        mListaTumbas = db.verListaGrabFiltrada(filtro,argumentos);
-//        ArrayList lt = getArguments().getStringArrayList("miListadoTumbas");
-//        mListaTumbas = lt;
 
-        mListViewTumbas.setAdapter(new AdaptadorTumbas());
-
-        mListViewTumbas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Grab tumbaPresionada = mListaTumbas.get(position);
-
-                Toast.makeText(esteContexto, tumbaPresionada.getIdGrab() +
-                    " " + tumbaPresionada.getGrabname(),Toast.LENGTH_SHORT).show();
-
-                //Abre una actividad
-                Intent intento = new Intent(esteContexto, MiPosicion.class);
-                intento.putExtra("idGrab",tumbaPresionada.getIdGrab());
-                startActivity(intento);
-
-            }
-        });
-
-        return viewFragmento;
-    }
-
-    private class AdaptadorTumbas extends BaseAdapter{
-
-        @Override
-        public int getCount() {
-            return mListaTumbas.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mListaTumbas.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View filaView = getActivity().getLayoutInflater().inflate(R.layout.fila_lista_tumbas,null);
-
-            Grab nuevaTumba = mListaTumbas.get(position);
-
-            TextView tvidGrab = (TextView) filaView.findViewById(R.id.textViewIdGrab);
-            tvidGrab.setText(nuevaTumba.getIdGrab());
-
-            TextView tvGrabname = (TextView) filaView.findViewById(R.id.textViewGrabname);
-            tvGrabname.setText(nuevaTumba.getGrabname());
-
-            TextView tvTlf1 = (TextView) filaView.findViewById(R.id.textViewTelefon1);
-            tvTlf1.setText(nuevaTumba.getTelefon1());
-
-            return filaView;
-        }
-    }
 
 }

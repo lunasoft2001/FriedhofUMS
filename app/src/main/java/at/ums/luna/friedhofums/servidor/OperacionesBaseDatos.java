@@ -72,12 +72,12 @@ public class OperacionesBaseDatos {
             DBValores.ColumnasGrab.LONGITUD
     };
 
-    public List<Grab> verListaGrabFiltrada(String filtro, String[] argumentos){
+    public ArrayList<Grab> verListaGrabFiltrada(String filtro, String[] argumentos){
         leer();
 
         Cursor cursor = db.query(DBValores.Tablas.GRAB,todasColumnasGrab,filtro,argumentos,null,null,null,null);
 
-        List<Grab> listaGrab = new ArrayList<>();
+        ArrayList<Grab> listaGrab = new ArrayList<>();
         while (cursor.moveToNext()){
             Grab grab = new Grab();
             grab.setIdGrab(cursor.getString(cursor.getColumnIndex(DBValores.ColumnasGrab.ID_GRAB)));
