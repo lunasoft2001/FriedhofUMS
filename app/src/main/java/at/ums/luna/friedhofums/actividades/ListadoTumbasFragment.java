@@ -78,10 +78,10 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
         mListViewTumbas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Grab tumbaPresionada = mListaTumbas.get(position);
 
-                Toast.makeText(esteContexto, tumbaPresionada.getIdGrab() +
-                    " " + tumbaPresionada.getGrabname(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(esteContexto, tumbaPresionada.getIdGrab(), Toast.LENGTH_SHORT).show();
 
                 //Abre una actividad
                 Intent intento = new Intent(esteContexto, MiPosicion.class);
@@ -115,6 +115,23 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
         } else {
             mListViewTumbas.setFilterText(newText.toString());
         }
+
+        mListViewTumbas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Grab tumbaPresionada = adaptadorTumbas.grabArrayList.get(position);
+
+                Toast.makeText(esteContexto, tumbaPresionada.getIdGrab(), Toast.LENGTH_SHORT).show();
+
+                //Abre una actividad
+                Intent intento = new Intent(esteContexto, MiPosicion.class);
+                intento.putExtra("idGrab",tumbaPresionada.getIdGrab());
+                startActivity(intento);
+
+            }
+        });
+
 
         return true;
     }

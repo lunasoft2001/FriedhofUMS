@@ -88,7 +88,17 @@ public class AdaptadorTumbas extends BaseAdapter implements Filterable {
                             if(g.getGrabname().toLowerCase().contains(constraint.toString()))
                                 resultados.add(g);
                         }
+                        for(final Grab g : origen) {
+                            if(g.getIdGrab().toLowerCase().contains(constraint.toString()))
+                                resultados.add(g);
+                        }
+                        for(final Grab g : origen) {
+                            if(g.getKunde().toLowerCase().contains(constraint.toString()))
+                                resultados.add(g);
+                        }
                     }
+
+
 
                     oReturn.values = resultados;
                 }
