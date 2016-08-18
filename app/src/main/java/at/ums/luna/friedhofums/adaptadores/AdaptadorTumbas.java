@@ -96,6 +96,18 @@ public class AdaptadorTumbas extends BaseAdapter implements Filterable {
                             if(g.getKunde().toLowerCase().contains(constraint.toString()))
                                 resultados.add(g);
                         }
+                        for(final Grab g : origen) {
+                            if(g.getTelefon1().toLowerCase().contains(constraint.toString()))
+                                resultados.add(g);
+                        }
+                        for(final Grab g : origen) {
+                            if(g.getTelefon2().toLowerCase().contains(constraint.toString()))
+                                resultados.add(g);
+                        }
+                        for(final Grab g : origen) {
+                            if(g.getFriedhof().toLowerCase().contains(constraint.toString()))
+                                resultados.add(g);
+                        }
                     }
 
 

@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import at.ums.luna.friedhofums.R;
+import at.ums.luna.friedhofums.modelo.ArbeitKopf;
 import at.ums.luna.friedhofums.modelo.Grab;
 
 /**
@@ -289,5 +290,76 @@ public class OperacionesBaseDatos {
         });
 
     }
+
+    /**
+     * ARBEIT_KOPF
+     */
+
+    public static final String[] todasColumnasArbeit = {
+            DBValores.ColumnasArbeitKopf.TITLE,
+            DBValores.ColumnasArbeitKopf.MITARBEITER,
+            DBValores.ColumnasArbeitKopf.FECHA,
+            DBValores.ColumnasArbeitKopf.TERMINADO
+    };
+
+
+    public ArrayList<ArbeitKopf> verArbeitListFiltrada(String filtro, String[] argumentos){
+        final ArrayList<ArbeitKopf> listaTrabajos = new ArrayList<>();
+
+//        Valores para intentar controlar el tiempo de carga
+
+
+        final int PAGESIZE = 100;
+        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+        QueryOptions queryOptions = new QueryOptions();
+        queryOptions.setPageSize(PAGESIZE);
+        queryOptions.addSortByOption("fecha ASC");
+        dataQuery.setQueryOptions(queryOptions);
+
+
+        Backendless.Persistence.of(ArbeitKopf.class).find(dataQuery, new AsyncCallback<BackendlessCollection<ArbeitKopf>>() {
+
+            private int offset = 0;
+            private boolean firstResponse =true;
+
+            @Override
+            public void handleResponse(BackendlessCollection<ArbeitKopf> trabajosObtenidos) {
+
+                if(firstResponse){
+
+                    Log.i("JUANJO", String.valueOf(trabajosObtenidos.getTotalObjects()));
+                    firstResponse = false;
+                }
+
+                int size = trabajosObtenidos.getCurrentPage().size();
+                Log.i("JUANJO", "Cargados " + size + " trabajos en la pagina actual");
+                if (size > 0)
+                {
+                    offset+= trabajosObtenidos.getCurrentPage().size();
+                    trabajosObtenidos.getPage(PAGESIZE,offset,this);
+
+                    for (ArbeitKopf cl : trabajosObtenidos.getCurrentPage()){
+                        listaTrabajos.add(cl);
+                    }
+                    trabajosObtenidos.getCurrentPage();
+                } else {
+                    Log.i("JUANJO", "se van a obtener FINAL " + listaTrabajos.size() + " registros");
+
+                }
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault backendlessFault) {
+                Log.i("JUANJO","Error num " + backendlessFault.getCode());
+            }
+        });
+
+
+
+        Log.i("JUANJO", "DATOS QUE VOY A DEVOLVER " + listaTrabajos.size() + " registros");
+        return listaTrabajos;
+    }
+
 }
 

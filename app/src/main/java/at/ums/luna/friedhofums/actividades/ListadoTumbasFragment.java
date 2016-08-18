@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -99,7 +100,7 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
     private void setupSearchView(){
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
-        mSearchView.setSubmitButtonEnabled(true);
+        // mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setQueryHint("Suchen hear");
     }
 
@@ -179,7 +180,8 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
 //                }
 //               listaGrabBack.getCurrentPage();
 //
-//                mListViewTumbas.setAdapter(new AdaptadorTumbas());
+//                mListViewTumbas.setAdapter(new AdaptadorTumbas(esteContexto,mListaTumbas));
+//                mListViewTumbas.setTextFilterEnabled(true);
 //
 //            }
 //
@@ -204,9 +206,11 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
 //            }
 //        });
 //
+//        setupSearchView();
+//
 //        return viewFragmento;
 //    }
-//
+
 
 
 

@@ -59,7 +59,8 @@
 
         <activity android:name=".actividades.ListadoTumbas">
         </activity>
-
+        <activity android:name=".actividades.ListadoArbeit">
+        </activity>
     </application>
 
 </manifest>

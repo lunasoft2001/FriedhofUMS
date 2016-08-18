@@ -7,6 +7,7 @@ public class DBValores {
 
     interface Tablas{
         String GRAB = "Grab";
+        String ARBEIT_KOPF = "ArbeitKopf";
     }
 
     interface ColumnasGrab{
@@ -23,5 +24,12 @@ public class DBValores {
         String NUMMER = "nummer";
         String LATITUD = "latitud";
         String LONGITUD = "longitud";
+    }
+
+    interface ColumnasArbeitKopf{
+        String TITLE = "title";
+        String MITARBEITER = "mitarbeiter";
+        String FECHA = "fecha";
+        String TERMINADO = "terminado";
     }
 }

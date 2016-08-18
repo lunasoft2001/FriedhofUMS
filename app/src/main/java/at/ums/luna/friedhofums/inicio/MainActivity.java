@@ -24,6 +24,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
 import at.ums.luna.friedhofums.R;
+import at.ums.luna.friedhofums.actividades.ListadoArbeit;
 import at.ums.luna.friedhofums.actividades.ListadoTumbas;
 import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.actividades.Preferencias;
@@ -149,6 +150,12 @@ public class MainActivity extends AppCompatActivity {
         intento.putExtra("modo",2);
         startActivity(intento);
 
+    }
+
+    public void abrirListadoTareas(View v){
+        Intent intento = new Intent(this, ListadoArbeit.class);
+        intento.putExtra("modo",1);
+        startActivity(intento);
     }
 
 }

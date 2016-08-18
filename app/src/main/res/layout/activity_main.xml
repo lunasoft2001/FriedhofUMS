@@ -127,13 +127,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:text="Grab mit filter"
+                    android:text="Arbeit Liste"
                     android:background="@drawable/borde_imagen_accent"
                     android:elevation="4dp"
                     android:gravity="center"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
-                    android:onClick="mostrarGeoCategorias"/>
+                    android:onClick="abrirListadoTareas"/>
 
                 <TextView
                     android:layout_width="match_parent"

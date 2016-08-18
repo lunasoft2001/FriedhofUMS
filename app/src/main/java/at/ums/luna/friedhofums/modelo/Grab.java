@@ -24,7 +24,7 @@ public class Grab {
     private double latitud;
     private double longitud;
 
-    public Grab(){};
+    public Grab(){}
 
     public Grab(String idGrab, String grabname, String friedhof, String feld, String reihe, String nummer,
                 String kunde, String grabart, String bemerkung, String telefon1, String telefon2,
