@@ -1,6 +1,8 @@
 package at.ums.luna.friedhofums.modelo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by luna-aleixos on 16.08.2016.
@@ -11,14 +13,19 @@ public class ArbeitKopf {
     private String mitarbeiter;
     private Date fecha;
     private boolean terminado;
+    private List<ArbeitDetail> arbeitDetail;
+
+    private String objectId;
 
     public ArbeitKopf() {}
 
-    public ArbeitKopf(String title, String mitarbeiter, Date fecha, boolean terminado) {
+    public ArbeitKopf(String title, String mitarbeiter, Date fecha, boolean terminado, String objectId, List<ArbeitDetail> arbeitDetail) {
         this.title = title;
         this.mitarbeiter = mitarbeiter;
         this.fecha = fecha;
         this.terminado = terminado;
+        this.objectId = objectId;
+        this.arbeitDetail = arbeitDetail;
     }
 
     public String getTitle() {
@@ -51,5 +58,21 @@ public class ArbeitKopf {
 
     public void setTerminado(boolean terminado) {
         this.terminado = terminado;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public List<ArbeitDetail> getArbeitDetail() {
+        return arbeitDetail;
+    }
+
+    public void setArbeitDetail(List<ArbeitDetail> arbeitDetail) {
+        this.arbeitDetail = arbeitDetail;
     }
 }

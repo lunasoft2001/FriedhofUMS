@@ -70,38 +70,6 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
 
     }
 
-//    private View obtenerListadoTareas(View viewFragmento) {
-//        mListaTareas = new ArrayList<ArbeitKopf>();
-//        OperacionesBaseDatos db = new OperacionesBaseDatos(esteContexto);
-//        mListaTareas =  db.verArbeitListFiltrada(filtro,argumentos);
-//
-//        adaptadorTareas = new AdaptadorArbeitKopf(esteContexto,mListaTareas);
-//        mListViewArbeit.setAdapter(adaptadorTareas);
-//
-//        mListViewArbeit.setTextFilterEnabled(true);
-//
-//
-//        mListViewArbeit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                ArbeitKopf tareaPresionada = mListaTareas.get(position);
-//
-//                Toast.makeText(esteContexto, tareaPresionada.getTitle(), Toast.LENGTH_SHORT).show();
-//
-//                //Abre una actividad
-//                Intent intento = new Intent(esteContexto, MiPosicion.class);
-//                intento.putExtra("title",tareaPresionada.getTitle());
-//                startActivity(intento);
-//
-//            }
-//        });
-//
-//        setupSearchView();
-//
-//        return viewFragmento;
-//    }
-
     private void setupSearchView(){
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
@@ -194,12 +162,13 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         ArbeitKopf tareaPresionada = mListaTareas.get(position);
 
-                        Toast.makeText(esteContexto,tareaPresionada.getTitle(),Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(esteContexto,tareaPresionada.getObjectId(),Toast.LENGTH_SHORT).show();
                         //Abre una actividad
-//                        Intent intento = new Intent(esteContexto, MiPosicion.class);
-//                        intento.putExtra("title",tareaPresionada.getTitle());
-//                        startActivity(intento);
+                        Intent intento = new Intent(esteContexto, ListadoDetail.class);
+                        intento.putExtra("idTarea",tareaPresionada.getObjectId());
+                        intento.putExtra("MODO", 2);
+                        startActivity(intento);
+
 
                     }
                 });
@@ -219,11 +188,12 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArbeitKopf tareaPresionada = mListaTareas.get(position);
 
-                Toast.makeText(esteContexto,tareaPresionada.getTitle(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(esteContexto,tareaPresionada.getObjectId(),Toast.LENGTH_SHORT).show();
                 //Abre una actividad
-//                Intent intento = new Intent(esteContexto, MiPosicion.class);
-//                intento.putExtra("title",tareaPresionada.getTitle());
-//                startActivity(intento);
+                Intent intento = new Intent(esteContexto, ListadoDetail.class);
+                intento.putExtra("idTarea",tareaPresionada.getObjectId());
+                intento.putExtra("MODO", 2);
+                startActivity(intento);
 
             }
         });
@@ -232,6 +202,39 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
 
         return viewFragmento;
     }
+
+    //    private View obtenerListadoTareas(View viewFragmento) {
+//        mListaTareas = new ArrayList<ArbeitKopf>();
+//        OperacionesBaseDatos db = new OperacionesBaseDatos(esteContexto);
+//        mListaTareas =  db.verArbeitListFiltrada(filtro,argumentos);
+//
+//        adaptadorTareas = new AdaptadorArbeitDetalle(esteContexto,mListaTareas);
+//        mListViewArbeit.setAdapter(adaptadorTareas);
+//
+//        mListViewArbeit.setTextFilterEnabled(true);
+//
+//
+//        mListViewArbeit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                ArbeitKopf tareaPresionada = mListaTareas.get(position);
+//
+//                Toast.makeText(esteContexto, tareaPresionada.getTitle(), Toast.LENGTH_SHORT).show();
+//
+//                //Abre una actividad
+//                Intent intento = new Intent(esteContexto, MiPosicion.class);
+//                intento.putExtra("title",tareaPresionada.getTitle());
+//                startActivity(intento);
+//
+//            }
+//        });
+//
+//        setupSearchView();
+//
+//        return viewFragmento;
+//    }
+
 }
 
 

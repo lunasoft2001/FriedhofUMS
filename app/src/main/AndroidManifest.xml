@@ -61,6 +61,8 @@
         </activity>
         <activity android:name=".actividades.ListadoArbeit">
         </activity>
+        <activity android:name=".actividades.ListadoDetail">
+        </activity>
     </application>
 
 </manifest>
