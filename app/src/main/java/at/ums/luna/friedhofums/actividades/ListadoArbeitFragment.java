@@ -189,6 +189,21 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
                 mListViewArbeit.setAdapter(new AdaptadorArbeitKopf(esteContexto,mListaTareas));
                 mListViewArbeit.setTextFilterEnabled(true);
 
+                mListViewArbeit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        ArbeitKopf tareaPresionada = mListaTareas.get(position);
+
+                        Toast.makeText(esteContexto,tareaPresionada.getTitle(),Toast.LENGTH_SHORT).show();
+
+                        //Abre una actividad
+//                        Intent intento = new Intent(esteContexto, MiPosicion.class);
+//                        intento.putExtra("title",tareaPresionada.getTitle());
+//                        startActivity(intento);
+
+                    }
+                });
+
             }
 
             @Override
@@ -204,10 +219,11 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArbeitKopf tareaPresionada = mListaTareas.get(position);
 
+                Toast.makeText(esteContexto,tareaPresionada.getTitle(),Toast.LENGTH_SHORT).show();
                 //Abre una actividad
-                Intent intento = new Intent(esteContexto, MiPosicion.class);
-                intento.putExtra("title",tareaPresionada.getTitle());
-                startActivity(intento);
+//                Intent intento = new Intent(esteContexto, MiPosicion.class);
+//                intento.putExtra("title",tareaPresionada.getTitle());
+//                startActivity(intento);
 
             }
         });
