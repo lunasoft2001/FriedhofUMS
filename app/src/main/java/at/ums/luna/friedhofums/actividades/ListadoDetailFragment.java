@@ -23,6 +23,8 @@ import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.QueryOptions;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import at.ums.luna.friedhofums.GPS.MiPosicion;
@@ -71,7 +73,6 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
     private void setupSearchView(){
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
-        // mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setQueryHint("Suchen hier");
     }
 
@@ -88,21 +89,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
             mListViewDetail.setFilterText(newText.toString());
         }
 
-        mListViewDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                ArbeitDetail tareaaPresionada = adaptadorDetalle.objetoArrayList.get(position);
-
-                Toast.makeText(esteContexto, tareaaPresionada.getGrab().getIdGrab(), Toast.LENGTH_SHORT).show();
-
-                //Abre una actividad
-                Intent intento = new Intent(esteContexto, MiPosicion.class);
-                intento.putExtra("title",tareaaPresionada.getGrab().getIdGrab());
-                startActivity(intento);
-
-            }
-        });
+        clickEnLista();
 
         return true;
     }
@@ -115,12 +102,10 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         final int PAGESIZE = 100;
 
         String whereClause = filtro;
-        List<String> sortBy = new ArrayList<String>();
-        sortBy.add("cantidad");
         BackendlessDataQuery dataQuery = new BackendlessDataQuery();
         QueryOptions queryOptions = new QueryOptions();
+        queryOptions.addSortByOption("idGrab");
         queryOptions.setPageSize(PAGESIZE);
-        queryOptions.setSortBy(sortBy);
         dataQuery.setWhereClause(whereClause.toString());
         dataQuery.setQueryOptions(queryOptions);
 
@@ -153,24 +138,10 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                 }
                 listaTareasBack.getCurrentPage();
 
-                mListViewDetail.setAdapter(new AdaptadorArbeitDetalle(esteContexto,mListaDetalle));
+                adaptadorDetalle = new AdaptadorArbeitDetalle(esteContexto,mListaDetalle);
+
+                mListViewDetail.setAdapter(adaptadorDetalle);
                 mListViewDetail.setTextFilterEnabled(true);
-
-                mListViewDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        ArbeitDetail detallePresionado = mListaDetalle.get(position);
-
-                        Toast.makeText(esteContexto,detallePresionado.getObjectId(),Toast.LENGTH_SHORT).show();
-                        //Abre una actividad
-                        Intent intento = new Intent(esteContexto, ListadoDetail.class);
-                        intento.putExtra("title",detallePresionado.getObjectId());
-                        startActivity(intento);
-
-
-                    }
-                });
-
             }
 
             @Override
@@ -180,26 +151,28 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
 
         });
 
-
-        mListViewDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ArbeitDetail detallePresionado = mListaDetalle.get(position);
-
-                Toast.makeText(esteContexto,detallePresionado.getObjectId(),Toast.LENGTH_SHORT).show();
-                //Abre una actividad
-                Intent intento = new Intent(esteContexto, ListadoDetail.class);
-                intento.putExtra("title",detallePresionado.getObjectId());
-                startActivity(intento);
-
-
-            }
-        });
+        clickEnLista();
 
         setupSearchView();
 
         return viewFragmento;
     }
 
+    private void clickEnLista() {
+        mListViewDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArbeitDetail detallePresionado = adaptadorDetalle.objetoArrayList.get(position);
+
+                Toast.makeText(esteContexto,detallePresionado.getIdGrab(),Toast.LENGTH_SHORT).show();
+                //Abre una actividad
+//                        Intent intento = new Intent(esteContexto, ListadoDetail.class);
+//                        intento.putExtra("title",detallePresionado.getObjectId());
+//                        startActivity(intento);
+
+
+            }
+        });
+    }
 
 }

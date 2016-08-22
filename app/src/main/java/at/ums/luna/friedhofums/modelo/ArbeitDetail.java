@@ -3,11 +3,12 @@ package at.ums.luna.friedhofums.modelo;
 /**
  * Created by luna-aleixos on 19.08.2016.
  */
-public class ArbeitDetail {
+public class ArbeitDetail{
 
     private String objectId;
     private String detalle;
     private Grab grab;
+    private String idGrab;
 
 
     public ArbeitDetail() {
@@ -17,6 +18,7 @@ public class ArbeitDetail {
         this.objectId = objectId;
         this.detalle = detalle;
         this.grab = grab;
+        this.idGrab = idGrab;
     }
 
     public String getObjectId() {
@@ -43,4 +45,11 @@ public class ArbeitDetail {
         this.grab = grab;
     }
 
+    public String getIdGrab() {
+        return idGrab;
+    }
+
+    public void setIdGrab(String idGrab) {
+        this.idGrab = idGrab;
+    }
 }

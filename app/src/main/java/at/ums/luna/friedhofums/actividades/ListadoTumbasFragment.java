@@ -76,11 +76,19 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
         mListViewTumbas.setTextFilterEnabled(true);
 
 
+        clickEnLista();
+
+        setupSearchView();
+
+        return viewFragmento;
+    }
+
+    private void clickEnLista() {
         mListViewTumbas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Grab tumbaPresionada = mListaTumbas.get(position);
+                Grab tumbaPresionada = adaptadorTumbas.grabArrayList.get(position);
 
                 Toast.makeText(esteContexto, tumbaPresionada.getIdGrab(), Toast.LENGTH_SHORT).show();
 
@@ -91,10 +99,6 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
 
             }
         });
-
-        setupSearchView();
-
-        return viewFragmento;
     }
 
     private void setupSearchView(){
@@ -117,21 +121,7 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
             mListViewTumbas.setFilterText(newText.toString());
         }
 
-        mListViewTumbas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Grab tumbaPresionada = adaptadorTumbas.grabArrayList.get(position);
-
-                Toast.makeText(esteContexto, tumbaPresionada.getIdGrab(), Toast.LENGTH_SHORT).show();
-
-                //Abre una actividad
-                Intent intento = new Intent(esteContexto, MiPosicion.class);
-                intento.putExtra("idGrab",tumbaPresionada.getIdGrab());
-                startActivity(intento);
-
-            }
-        });
+        clickEnLista();
 
 
         return true;

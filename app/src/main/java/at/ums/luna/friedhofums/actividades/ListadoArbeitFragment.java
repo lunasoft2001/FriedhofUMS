@@ -73,7 +73,6 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
     private void setupSearchView(){
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
-        // mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setQueryHint("Suchen hear");
     }
 
@@ -90,22 +89,7 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
             mListViewArbeit.setFilterText(newText.toString());
         }
 
-        mListViewArbeit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                ArbeitKopf tareaaPresionada = adaptadorTareas.objetoArrayList.get(position);
-
-                Toast.makeText(esteContexto, tareaaPresionada.getTitle(), Toast.LENGTH_SHORT).show();
-
-                //Abre una actividad
-                Intent intento = new Intent(esteContexto, MiPosicion.class);
-                intento.putExtra("title",tareaaPresionada.getTitle());
-                startActivity(intento);
-
-            }
-        });
-
+        clickEnLista();
 
         return true;
     }
@@ -154,25 +138,10 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
                 }
                 listaTareasBack.getCurrentPage();
 
-                mListViewArbeit.setAdapter(new AdaptadorArbeitKopf(esteContexto,mListaTareas));
+                adaptadorTareas = new AdaptadorArbeitKopf(esteContexto,mListaTareas);
+
+                mListViewArbeit.setAdapter(adaptadorTareas);
                 mListViewArbeit.setTextFilterEnabled(true);
-
-                mListViewArbeit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        ArbeitKopf tareaPresionada = mListaTareas.get(position);
-
-                        Toast.makeText(esteContexto,tareaPresionada.getObjectId(),Toast.LENGTH_SHORT).show();
-                        //Abre una actividad
-                        Intent intento = new Intent(esteContexto, ListadoDetail.class);
-                        intento.putExtra("idTarea",tareaPresionada.getObjectId());
-                        intento.putExtra("MODO", 2);
-                        startActivity(intento);
-
-
-                    }
-                });
-
             }
 
             @Override
@@ -182,13 +151,21 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
 
         });
 
+        clickEnLista();
 
+        setupSearchView();
+
+        return viewFragmento;
+    }
+
+    private void clickEnLista() {
         mListViewArbeit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ArbeitKopf tareaPresionada = mListaTareas.get(position);
+                ArbeitKopf tareaPresionada = adaptadorTareas.objetoArrayList.get(position);
 
-                Toast.makeText(esteContexto,tareaPresionada.getObjectId(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(esteContexto, tareaPresionada.getTitle(), Toast.LENGTH_SHORT).show();
+
                 //Abre una actividad
                 Intent intento = new Intent(esteContexto, ListadoDetail.class);
                 intento.putExtra("idTarea",tareaPresionada.getObjectId());
@@ -197,10 +174,6 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
 
             }
         });
-
-        setupSearchView();
-
-        return viewFragmento;
     }
 
     //    private View obtenerListadoTareas(View viewFragmento) {
