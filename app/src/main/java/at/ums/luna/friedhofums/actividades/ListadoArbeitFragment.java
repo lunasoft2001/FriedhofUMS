@@ -73,7 +73,7 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
     private void setupSearchView(){
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
-        mSearchView.setQueryHint("Suchen hear");
+        mSearchView.setQueryHint("Suchen hier");
     }
 
     @Override

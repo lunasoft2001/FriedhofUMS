@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,6 +37,13 @@ public class AdaptadorArbeitDetalle extends BaseAdapter implements Filterable {
         TextView tvIdGrab;
         TextView tvGrabname;
         TextView tvDetalle;
+        ImageView icoTierra;
+        ImageView icoRegar;
+        ImageView icoRecoger;
+        ImageView icoPlantar;
+        ImageView icoPflege;
+        ImageView icoLimpiar;
+        ImageView icoDecorar;
     }
 
 
@@ -62,6 +71,13 @@ public class AdaptadorArbeitDetalle extends BaseAdapter implements Filterable {
             holder.tvIdGrab = (TextView) convertView.findViewById(R.id.textViewIdGrab);
             holder.tvGrabname = (TextView) convertView.findViewById(R.id.textViewGrabname);
             holder.tvDetalle = (TextView) convertView.findViewById(R.id.textViewDetalle);
+            holder.icoTierra = (ImageView) convertView.findViewById(R.id.botonTierra);
+            holder.icoRegar = (ImageView) convertView.findViewById(R.id.botonRegar);
+            holder.icoRecoger = (ImageView) convertView.findViewById(R.id.botonRecoger);
+            holder.icoPlantar = (ImageView) convertView.findViewById(R.id.botonPlantar);
+            holder.icoPflege = (ImageView) convertView.findViewById(R.id.botonPflege);
+            holder.icoLimpiar = (ImageView) convertView.findViewById(R.id.botonLimpiar);
+            holder.icoDecorar = (ImageView) convertView.findViewById(R.id.botonDecorar);
             convertView.setTag(holder);
         }
         else{
@@ -70,7 +86,16 @@ public class AdaptadorArbeitDetalle extends BaseAdapter implements Filterable {
 
         holder.tvIdGrab.setText(objetoArrayList.get(position).getGrab().getIdGrab());
         holder.tvGrabname.setText(objetoArrayList.get(position).getGrab().getGrabname());
-        holder.tvDetalle.setText(objetoArrayList.get(position).getDetalle());
+        holder.tvDetalle.setText(objetoArrayList.get(position).getObservaciones());
+
+        switch (objetoArrayList.get(position).getTierra()){
+            case "JA":
+                holder.icoTierra.setBackgroundColor(Color.WHITE);
+                break;
+            case "NEIN":
+                holder.icoTierra.setBackgroundColor(Color.parseColor("#8BC34A"));
+                break;
+        }
 
         return convertView;
 

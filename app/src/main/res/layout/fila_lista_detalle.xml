@@ -28,12 +28,91 @@
             android:text="GrabName"
             android:id="@+id/textViewGrabname"
             android:gravity="center_vertical"
-            android:textSize="12dp"
+            android:textSize="24dp"
             android:textStyle="bold"
             android:layout_marginLeft="10dp"/>
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="@dimen/botones_lista"
+            android:layout_height="@dimen/botones_lista"
+            android:id="@+id/botonRecoger"
+            android:src="@drawable/recoger"
+            android:scaleType="fitCenter"
+            android:background="@color/colorAccent"
+            android:padding="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"/>
+
+        <ImageView
+            android:layout_width="@dimen/botones_lista"
+            android:layout_height="@dimen/botones_lista"
+            android:id="@+id/botonTierra"
+            android:src="@drawable/tierra"
+            android:scaleType="fitCenter"
+            android:background="@color/colorAccent"
+            android:layout_margin="4dp"
+            android:padding="4dp"/>
+
+        <ImageView
+            android:layout_width="@dimen/botones_lista"
+            android:layout_height="@dimen/botones_lista"
+            android:id="@+id/botonPlantar"
+            android:src="@drawable/plantar"
+            android:scaleType="fitCenter"
+            android:background="@color/colorAccent"
+            android:layout_margin="4dp"
+            android:padding="4dp"/>
+
+        <ImageView
+            android:layout_width="@dimen/botones_lista"
+            android:layout_height="@dimen/botones_lista"
+            android:id="@+id/botonRegar"
+            android:src="@drawable/regar"
+            android:scaleType="fitCenter"
+            android:background="@color/colorAccent"
+            android:layout_margin="4dp"
+            android:padding="4dp"/>
+
+        <ImageView
+            android:layout_width="@dimen/botones_lista"
+            android:layout_height="@dimen/botones_lista"
+            android:id="@+id/botonLimpiar"
+            android:src="@drawable/limpiar"
+            android:scaleType="fitCenter"
+            android:background="@color/colorAccent"
+            android:layout_margin="4dp"
+            android:padding="4dp"/>
+
+        <ImageView
+            android:layout_width="@dimen/botones_lista"
+            android:layout_height="@dimen/botones_lista"
+            android:id="@+id/botonDecorar"
+            android:src="@drawable/decorar"
+            android:scaleType="fitCenter"
+            android:background="@color/colorAccent"
+            android:layout_margin="4dp"
+            android:padding="4dp"/>
+
+        <ImageView
+            android:layout_width="@dimen/botones_lista"
+            android:layout_height="@dimen/botones_lista"
+            android:id="@+id/botonPflege"
+            android:src="@drawable/pflege"
+            android:scaleType="fitCenter"
+            android:background="@color/colorAccent"
+            android:layout_margin="4dp"
+            android:padding="4dp"/>
+
+
+    </LinearLayout>
 
 
     <TextView
