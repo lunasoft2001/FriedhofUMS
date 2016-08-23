@@ -2,6 +2,7 @@ package at.ums.luna.friedhofums.adaptadores;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import java.util.ArrayList;
 
@@ -87,19 +90,17 @@ public class AdaptadorArbeitDetalle extends BaseAdapter implements Filterable {
         holder.tvIdGrab.setText(objetoArrayList.get(position).getGrab().getIdGrab());
         holder.tvGrabname.setText(objetoArrayList.get(position).getGrab().getGrabname());
         holder.tvDetalle.setText(objetoArrayList.get(position).getObservaciones());
-
-        switch (objetoArrayList.get(position).getTierra()){
-            case "JA":
-                holder.icoTierra.setBackgroundColor(Color.WHITE);
-                break;
-            case "NEIN":
-                holder.icoTierra.setBackgroundColor(Color.parseColor("#8BC34A"));
-                break;
-        }
+        holder.icoTierra.setAlpha(objetoArrayList.get(position).transparenciaTarea(objetoArrayList.get(position).getTierra()));
+        holder.icoRegar.setAlpha(objetoArrayList.get(position).transparenciaTarea(objetoArrayList.get(position).getRegar()));
+        holder.icoRecoger.setAlpha(objetoArrayList.get(position).transparenciaTarea(objetoArrayList.get(position).getRecoger()));
+        holder.icoPlantar.setAlpha(objetoArrayList.get(position).transparenciaTarea(objetoArrayList.get(position).getPlantar()));
+        holder.icoPflege.setAlpha(objetoArrayList.get(position).transparenciaTarea(objetoArrayList.get(position).getPflege()));
+        holder.icoLimpiar.setAlpha(objetoArrayList.get(position).transparenciaTarea(objetoArrayList.get(position).getLimpiar()));
+        holder.icoDecorar.setAlpha(objetoArrayList.get(position).transparenciaTarea(objetoArrayList.get(position).getDecorar()));
 
         return convertView;
-
     }
+
 
     @Override
     public Filter getFilter() {

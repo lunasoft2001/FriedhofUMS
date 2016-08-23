@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -67,6 +68,14 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
 //        argumentos = getArguments().getStringArray("argumentos");
 
         return obtenerListadoTareas(viewFragmento);
+
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
 

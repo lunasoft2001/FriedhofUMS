@@ -1,5 +1,10 @@
 package at.ums.luna.friedhofums.modelo;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
+import at.ums.luna.friedhofums.R;
+
 /**
  * Created by luna-aleixos on 19.08.2016.
  */
@@ -144,4 +149,26 @@ public class ArbeitDetail{
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
+
+    /**
+     * GETTERS DE ICONOS DE TAREAS
+     */
+
+    public Float transparenciaTarea(String tarea){
+        Float transparencia;
+        switch (tarea){
+            case "JA":
+                transparencia = 1.0f;
+                break;
+            case "NEIN":
+                transparencia = 0.0f;
+                break;
+            default:
+                transparencia = 0.2f;
+                break;
+        }
+
+        return transparencia;
+    }
+
 }

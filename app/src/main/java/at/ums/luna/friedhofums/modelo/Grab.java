@@ -1,5 +1,7 @@
 package at.ums.luna.friedhofums.modelo;
 
+import android.content.Intent;
+
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
@@ -170,6 +172,29 @@ public class Grab {
         }
 
         return icono;
+    }
+
+    public int rutaDeIcono(){
+        int ruta;
+        switch (grabart){
+            case "Einzelgrab":
+                ruta = R.drawable.grab_normal;
+                break;
+            case "Doppelgrab":
+                ruta = R.drawable.grab_doble;
+                break;
+            case "Urnengrab":
+                ruta = R.drawable.grab_urne;
+                break;
+            case "Kindergrab":
+                ruta = R.drawable.grab_bebe;
+                break;
+            default:
+                ruta = R.drawable.grab_vacia;
+                break;
+        }
+
+        return ruta;
     }
 }
 

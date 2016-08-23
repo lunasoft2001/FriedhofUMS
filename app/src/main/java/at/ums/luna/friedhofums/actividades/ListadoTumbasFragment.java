@@ -3,8 +3,10 @@ package at.ums.luna.friedhofums.actividades;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -62,6 +64,14 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
         argumentos = getArguments().getStringArray("argumentos");
 
         return obtenerListadoTumbas(viewFragmento);
+
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
 

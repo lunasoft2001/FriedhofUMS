@@ -4,7 +4,9 @@ package at.ums.luna.friedhofums.actividades;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.WindowManager;
 import android.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -74,6 +76,14 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setQueryHint("Suchen hier");
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
     }
 
     @Override
@@ -164,11 +174,11 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArbeitDetail detallePresionado = adaptadorDetalle.objetoArrayList.get(position);
 
-                Toast.makeText(esteContexto,detallePresionado.getIdGrab(),Toast.LENGTH_SHORT).show();
                 //Abre una actividad
-//                        Intent intento = new Intent(esteContexto, ListadoDetail.class);
-//                        intento.putExtra("title",detallePresionado.getObjectId());
-//                        startActivity(intento);
+                Intent intento = new Intent(esteContexto, FormularioDetalle.class);
+                intento.putExtra("idObjeto",detallePresionado.getObjectId());
+                intento.putExtra("idGrab", detallePresionado.getIdGrab());
+                startActivity(intento);
 
 
             }
