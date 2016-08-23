@@ -4,155 +4,184 @@
              android:layout_height="match_parent"
              tools:context="at.ums.luna.friedhofums.actividades.FormularioDetalleFragment">
 
-
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="16dp"
-        android:layout_gravity="center_horizontal|top">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="grabName"
-            android:id="@+id/tvGrabname"
-            android:layout_marginTop="4dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Friedhof"
-            android:layout_marginRight="8dp"
-            android:id="@+id/tvFriedhof"
-            android:layout_below="@+id/tvGrabname"
-            android:layout_alignParentRight="true"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="16dp"
-            android:id="@+id/imageGrabart"
-            android:src="@drawable/grab_vacia"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/tvGrabname"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ohne Bemerkung"
-            android:id="@+id/tvBemerkung"
-            android:layout_marginTop="16dp"
-            android:padding="4dp"
-            android:textStyle="bold|italic"
-            android:layout_below="@+id/tvFriedhof"
-            android:layout_centerHorizontal="true"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Detalle"
-            android:id="@+id/tvDetalle"
-            android:layout_marginTop="16dp"
-            android:padding="4dp"
-            android:textStyle="normal|bold"
-            android:layout_below="@+id/tvBemerkung"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/borde_imagen_accent"/>
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:id="@+id/linLayBotones1"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:layout_below="@+id/tvDetalle">
+            android:layout_height="match_parent"
+            android:paddingTop="16dp"
+            android:layout_gravity="center_horizontal|top">
 
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/botonRecoger"
-                android:src="@drawable/recoger"
-                android:layout_marginRight="@dimen/botones_formulario"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="grabName"
+                android:id="@+id/tvGrabname"
+                android:layout_marginTop="4dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Friedhof"
+                android:layout_marginRight="8dp"
+                android:id="@+id/tvFriedhof"
+                android:layout_below="@+id/tvGrabname"
+                android:layout_alignParentRight="true"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="16dp"
+                android:id="@+id/imageGrabart"
+                android:src="@drawable/grab_vacia"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/tvGrabname"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ohne Bemerkung"
+                android:id="@+id/tvBemerkung"
+                android:layout_marginTop="16dp"
+                android:padding="4dp"
+                android:textStyle="bold|italic"
+                android:layout_below="@+id/tvFriedhof"
+                android:layout_centerHorizontal="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalle"
+                android:id="@+id/tvDetalle"
+                android:layout_marginTop="16dp"
+                android:padding="4dp"
+                android:textStyle="normal|bold"
+                android:layout_below="@+id/tvBemerkung"
+                android:layout_centerHorizontal="true"
                 android:background="@drawable/borde_imagen_accent"/>
 
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/botonTierra"
-                android:src="@drawable/tierra"
-                android:layout_marginRight="@dimen/botones_formulario"
-                android:background="@drawable/borde_imagen_accent"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:id="@+id/linLayBotones1"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_below="@+id/tvDetalle">
 
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/botonPlantar"
-                android:src="@drawable/plantar"
-                android:background="@drawable/borde_imagen_accent"/>
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/botonRecoger"
+                    android:src="@drawable/recoger"
+                    android:layout_marginRight="@dimen/botones_formulario"
+                    android:background="@drawable/borde_imagen_accent"/>
 
-        </LinearLayout>
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/botonTierra"
+                    android:src="@drawable/tierra"
+                    android:layout_marginRight="@dimen/botones_formulario"
+                    android:background="@drawable/borde_imagen_accent"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:id="@+id/linLayBotones2"
-            android:layout_below="@+id/linLayBotones1"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal">
-
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/botonRegar"
-                android:src="@drawable/regar"
-                android:layout_marginRight="@dimen/botones_formulario"
-                android:background="@drawable/borde_imagen_accent"/>
-
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/botonLimpiar"
-                android:src="@drawable/limpiar"
-                android:layout_marginRight="@dimen/botones_formulario"
-                android:background="@drawable/borde_imagen_accent"/>
-
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/botonDecorar"
-                android:src="@drawable/decorar"
-                android:background="@drawable/borde_imagen_accent"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:id="@+id/linLayBotones3"
-            android:layout_below="@+id/linLayBotones2"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal">
-
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/botonPflege"
-                android:src="@drawable/pflege"
-                android:background="@drawable/borde_imagen_accent"/>
-
-        </LinearLayout>
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/botonPlantar"
+                    android:src="@drawable/plantar"
+                    android:background="@drawable/borde_imagen_accent"/>
 
 
 
+            </LinearLayout>
 
-    </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:id="@+id/linLayBotones2"
+                android:layout_below="@+id/linLayBotones1"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/botonRegar"
+                    android:src="@drawable/regar"
+                    android:layout_marginRight="@dimen/botones_formulario"
+                    android:background="@drawable/borde_imagen_accent"/>
+
+
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/botonLimpiar"
+                    android:src="@drawable/limpiar"
+                    android:layout_marginRight="@dimen/botones_formulario"
+                    android:background="@drawable/borde_imagen_accent"/>
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/botonDecorar"
+                    android:src="@drawable/decorar"
+                    android:background="@drawable/borde_imagen_accent"/>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:id="@+id/linLayBotones3"
+                android:layout_below="@+id/linLayBotones2"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/botonPflege"
+                    android:src="@drawable/pflege"
+                    android:background="@drawable/borde_imagen_accent"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:id="@+id/linLayBotones4"
+                android:layout_below="@+id/linLayBotones3"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/botonGuardar"
+                    android:text="SPEICHERN"/>
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </ScrollView>
 </FrameLayout>

@@ -40,6 +40,7 @@ public class AdaptadorArbeitDetalle extends BaseAdapter implements Filterable {
         TextView tvIdGrab;
         TextView tvGrabname;
         TextView tvDetalle;
+        TextView tvBemerkung;
         ImageView icoTierra;
         ImageView icoRegar;
         ImageView icoRecoger;
@@ -74,6 +75,7 @@ public class AdaptadorArbeitDetalle extends BaseAdapter implements Filterable {
             holder.tvIdGrab = (TextView) convertView.findViewById(R.id.textViewIdGrab);
             holder.tvGrabname = (TextView) convertView.findViewById(R.id.textViewGrabname);
             holder.tvDetalle = (TextView) convertView.findViewById(R.id.textViewDetalle);
+            holder.tvBemerkung= (TextView) convertView.findViewById(R.id.textViewBemerkung);
             holder.icoTierra = (ImageView) convertView.findViewById(R.id.botonTierra);
             holder.icoRegar = (ImageView) convertView.findViewById(R.id.botonRegar);
             holder.icoRecoger = (ImageView) convertView.findViewById(R.id.botonRecoger);
@@ -89,7 +91,8 @@ public class AdaptadorArbeitDetalle extends BaseAdapter implements Filterable {
 
         holder.tvIdGrab.setText(objetoArrayList.get(position).getGrab().getIdGrab());
         holder.tvGrabname.setText(objetoArrayList.get(position).getGrab().getGrabname());
-        holder.tvDetalle.setText(objetoArrayList.get(position).getObservaciones());
+        holder.tvDetalle.setText(objetoArrayList.get(position).getDetalle());
+        holder.tvBemerkung.setText(objetoArrayList.get(position).getObservaciones());
         holder.icoTierra.setAlpha(objetoArrayList.get(position).transparenciaTarea(objetoArrayList.get(position).getTierra()));
         holder.icoRegar.setAlpha(objetoArrayList.get(position).transparenciaTarea(objetoArrayList.get(position).getRegar()));
         holder.icoRecoger.setAlpha(objetoArrayList.get(position).transparenciaTarea(objetoArrayList.get(position).getRecoger()));
@@ -119,6 +122,10 @@ public class AdaptadorArbeitDetalle extends BaseAdapter implements Filterable {
                         }
                         for(final ArbeitDetail g : origen) {
                             if(g.getGrab().getGrabname().toLowerCase().contains(constraint.toString()))
+                                resultados.add(g);
+                        }
+                        for(final ArbeitDetail g : origen) {
+                            if(g.getDetalle().toLowerCase().contains(constraint.toString()))
                                 resultados.add(g);
                         }
 
