@@ -4,6 +4,7 @@ package at.ums.luna.friedhofums.actividades;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -52,7 +53,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
     private String idTarea;
     private SearchView mSearchView;
     private int totalRegistro = 0;
-    private int contadorProgreso;
+    private ProgressDialog progress;
 
     private String idRecoger = "sin filtro";
     private String idTierra = "sin filtro";
@@ -76,6 +77,10 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
 
     public ListadoDetailFragment() {
         // Required empty public constructor
+    }
+
+    public Context esteContexto(){
+        return getContext();
     }
 
 
@@ -102,8 +107,6 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         pflege = (ImageButton)viewFragmento.findViewById(R.id.botonPflege);
         tvTotalRegistro = (TextView)viewFragmento.findViewById(R.id.tvTotalRegistro);
 
-
-//        return obtenerListadoDetalle(viewFragmento);
         return viewFragmento;
 
     }
@@ -130,38 +133,10 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
 
     }
 
-    //Intents para cualquier botón de la actividad
-    final View.OnClickListener mGlobal_onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.botonRecoger:
-                    switch (idRecoger){
-                        case "sin filtro":
-                            recoger.setBackgroundResource(R.drawable.borde_imagen_accent);
-                            idRecoger = "JA";
-                            break;
-                        case "JA":
-                            recoger.setAlpha(0.2f);
-                            idRecoger = "PENDIENTE";
-                            break;
-                        case "PENDIENTE":
-                            recoger.setAlpha(1.0f);
-                            recoger.setBackgroundResource(R.drawable.borde_imagen_sin_filtro);
-                            idRecoger = "sin filtro";
-                            break;
-                    }
-                    filtrar_tareas();
-                    break;
-
-            }
-        }
-    };
-
     @Override
     public void onResume() {
         super.onResume();
-        obtenerListadoDetalle(viewFragmento);
+        new obtenerListadoDetalleAsync().execute();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
@@ -189,20 +164,14 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         filtro = getArguments().getString("filtro");
 
         prepararFiltro(idRecoger,"recoger");
+        prepararFiltro(idTierra, "tierra");
+        prepararFiltro(idPlantar, "plantar");
+        prepararFiltro(idRegar, "regar");
+        prepararFiltro(idLimpiar, "limpiar");
+        prepararFiltro(idDecorar, "decorar");
+        prepararFiltro(idPflege, "pflege");
 
-//        switch (idRecoger){
-//            case "sin filtro":
-//                break;
-//            case "JA":
-//                filtro = filtro + " and recoger = 'JA'";
-//                break;
-//            case "PENDIENTE":
-//                filtro = filtro + " and recoger != 'JA'";
-//                filtro = filtro + " and recoger != 'NEIN'";
-//                break;
-//        }
-
-        obtenerListadoDetalle(viewFragmento);
+        new obtenerListadoDetalleAsync().execute();
 
     }
 
@@ -220,86 +189,87 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         }
     }
 
-    // ----------------------- METODO ANTIGUO DIRECTO AL SERVIDOR
-    private View obtenerListadoDetalle(View viewFragmento) {
-        mListaDetalle = new ArrayList<>();
+    private class obtenerListadoDetalleAsync extends AsyncTask<String, Integer, Integer>{
 
-        //Prepara la barra de progreso
-        final ProgressDialog progress;
-        progress =new ProgressDialog(getContext());
-        progress.setMessage("Herunterladend...");
-        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progress.setProgress(0);
-        progress.setCancelable(false);
-        contadorProgreso = 0;
-
-
-
-        final int PAGESIZE = 100;
-
-        String whereClause = filtro;
-        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
-        QueryOptions queryOptions = new QueryOptions();
-        queryOptions.addSortByOption("idGrab");
-        queryOptions.setPageSize(PAGESIZE);
-        dataQuery.setWhereClause(whereClause.toString());
-        dataQuery.setQueryOptions(queryOptions);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mListaDetalle = new ArrayList<>();
+            progress = new ProgressDialog(getContext());
+            progress.setTitle("Server Verbindung");
+            progress.setMessage("Herunterladend...");
+            progress.setProgressStyle(progress.STYLE_HORIZONTAL);
+            progress.setProgress(0);
+            progress.setMax(100);
+            progress.show();
 
 
-        Backendless.Persistence.of(ArbeitDetail.class).find(dataQuery, new AsyncCallback<BackendlessCollection<ArbeitDetail>>() {
+        }
 
-            private int offset = 0;
-            private boolean firstResponse = true;
+        @Override
+        protected Integer doInBackground(String... params) {
+
+            final int PAGESIZE = 100;
+            int offset= 0;
+            String whereClause = filtro;
+            BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+            QueryOptions queryOptions = new QueryOptions();
+            queryOptions.addSortByOption("idGrab");
+            queryOptions.setPageSize(PAGESIZE);
+            dataQuery.setWhereClause(whereClause.toString());
+            dataQuery.setQueryOptions(queryOptions);
+
+            BackendlessCollection<ArbeitDetail> arbeitDetailobtenidos;
+            arbeitDetailobtenidos = Backendless.Persistence.of(ArbeitDetail.class).find(dataQuery);
+
+            totalRegistro = arbeitDetailobtenidos.getTotalObjects();
+            progress.setMax(totalRegistro);
 
 
-            @Override
-            public void handleResponse(BackendlessCollection<ArbeitDetail> listaTareasBack) {
+            int size = arbeitDetailobtenidos.getCurrentPage().size();
 
-                if(firstResponse){
-                    totalRegistro = listaTareasBack.getTotalObjects();
-                    tvTotalRegistro.setText(String.valueOf(totalRegistro));
-                    progress.setMax(totalRegistro);
-                    progress.show();
+            while (size >0)
+            {
+                arbeitDetailobtenidos = arbeitDetailobtenidos.getPage(PAGESIZE,offset);
+                for (ArbeitDetail tl  : arbeitDetailobtenidos.getCurrentPage()){
+                    mListaDetalle.add(tl);
 
-                    firstResponse = false;
+                    progress.incrementProgressBy(1);
                 }
-
-                int size = listaTareasBack.getCurrentPage().size();
-
-                if (size>0){
-                    offset+= listaTareasBack.getCurrentPage().size();
-                    listaTareasBack.getPage(PAGESIZE,offset,this);
-
-                    for (ArbeitDetail tl  : listaTareasBack.getCurrentPage()){
-                        mListaDetalle.add(tl);
-                        progress.setProgress(contadorProgreso);
-                        contadorProgreso++;
-
-                    }
-                } else{
-                    progress.hide();
-
-                }
-                listaTareasBack.getCurrentPage();
-
-                adaptadorDetalle = new AdaptadorArbeitDetalle(esteContexto,mListaDetalle);
-
-                mListViewDetail.setAdapter(adaptadorDetalle);
-                mListViewDetail.setTextFilterEnabled(true);
+                offset+=size;
+                arbeitDetailobtenidos.getCurrentPage();
+                size = arbeitDetailobtenidos.getCurrentPage().size();
             }
 
-            @Override
-            public void handleFault(BackendlessFault backendlessFault) {
-                Log.i("MENSAJES","Error num " + backendlessFault.getCode());
+            publishProgress();
+            return totalRegistro;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            if(progress.getProgress() < progress.getMax()) {
+                progress.setProgress(values[0]);
             }
+        }
 
-        });
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
 
-        clickEnLista();
+            progress.dismiss();
 
-        setupSearchView();
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        return viewFragmento;
+            adaptadorDetalle = new AdaptadorArbeitDetalle(esteContexto,mListaDetalle);
+            mListViewDetail.setAdapter(adaptadorDetalle);
+            mListViewDetail.setTextFilterEnabled(true);
+
+            tvTotalRegistro.setText(String.valueOf(totalRegistro));
+            clickEnLista();
+            setupSearchView();
+
+        }
     }
 
     private void clickEnLista() {
@@ -313,10 +283,144 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                 intento.putExtra("idObjeto",detallePresionado.getObjectId());
                 intento.putExtra("idGrab", detallePresionado.getIdGrab());
                 startActivity(intento);
-
-
             }
         });
     }
+
+    //Intents para cualquier botón de la actividad
+    final View.OnClickListener mGlobal_onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.botonRecoger:
+                    switch (idRecoger){
+                        case "sin filtro":
+                            recoger.setBackgroundResource(R.drawable.borde_imagen_accent);
+                            idRecoger = "JA";
+                            break;
+                        case "JA":
+                            recoger.setAlpha(0.2f);
+                            idRecoger = "PENDIENTE";
+                            break;
+                        case "PENDIENTE":
+                            recoger.setAlpha(1.0f);
+                            recoger.setBackgroundResource(R.drawable.borde_imagen_sin_filtro);
+                            idRecoger = "sin filtro";
+                            break;
+                    }
+                    filtrar_tareas();
+                    break;
+                case R.id.botonTierra:
+                    switch (idTierra){
+                        case "sin filtro":
+                            tierra.setBackgroundResource(R.drawable.borde_imagen_accent);
+                            idTierra = "JA";
+                            break;
+                        case "JA":
+                            tierra.setAlpha(0.2f);
+                            idTierra = "PENDIENTE";
+                            break;
+                        case "PENDIENTE":
+                            tierra.setAlpha(1.0f);
+                            tierra.setBackgroundResource(R.drawable.borde_imagen_sin_filtro);
+                            idTierra = "sin filtro";
+                            break;
+                    }
+                    filtrar_tareas();
+                    break;
+                case R.id.botonPlantar:
+                    switch (idPlantar){
+                        case "sin filtro":
+                            plantar.setBackgroundResource(R.drawable.borde_imagen_accent);
+                            idPlantar = "JA";
+                            break;
+                        case "JA":
+                            plantar.setAlpha(0.2f);
+                            idPlantar = "PENDIENTE";
+                            break;
+                        case "PENDIENTE":
+                            plantar.setAlpha(1.0f);
+                            plantar.setBackgroundResource(R.drawable.borde_imagen_sin_filtro);
+                            idPlantar = "sin filtro";
+                            break;
+                    }
+                    filtrar_tareas();
+                    break;
+                case R.id.botonRegar:
+                    switch (idRegar){
+                        case "sin filtro":
+                            regar.setBackgroundResource(R.drawable.borde_imagen_accent);
+                            idRegar = "JA";
+                            break;
+                        case "JA":
+                            regar.setAlpha(0.2f);
+                            idRegar = "PENDIENTE";
+                            break;
+                        case "PENDIENTE":
+                            regar.setAlpha(1.0f);
+                            regar.setBackgroundResource(R.drawable.borde_imagen_sin_filtro);
+                            idRegar = "sin filtro";
+                            break;
+                    }
+                    filtrar_tareas();
+                    break;
+                case R.id.botonLimpiar:
+                    switch (idLimpiar){
+                        case "sin filtro":
+                            limpiar.setBackgroundResource(R.drawable.borde_imagen_accent);
+                            idLimpiar = "JA";
+                            break;
+                        case "JA":
+                            limpiar.setAlpha(0.2f);
+                            idLimpiar = "PENDIENTE";
+                            break;
+                        case "PENDIENTE":
+                            limpiar.setAlpha(1.0f);
+                            limpiar.setBackgroundResource(R.drawable.borde_imagen_sin_filtro);
+                            idLimpiar = "sin filtro";
+                            break;
+                    }
+                    filtrar_tareas();
+                    break;
+                case R.id.botonDecorar:
+                    switch (idDecorar){
+                        case "sin filtro":
+                            decorar.setBackgroundResource(R.drawable.borde_imagen_accent);
+                            idDecorar = "JA";
+                            break;
+                        case "JA":
+                            decorar.setAlpha(0.2f);
+                            idDecorar = "PENDIENTE";
+                            break;
+                        case "PENDIENTE":
+                            decorar.setAlpha(1.0f);
+                            decorar.setBackgroundResource(R.drawable.borde_imagen_sin_filtro);
+                            idDecorar = "sin filtro";
+                            break;
+                    }
+                    filtrar_tareas();
+                    break;
+                case R.id.botonPflege:
+                    switch (idPflege){
+                        case "sin filtro":
+                            pflege.setBackgroundResource(R.drawable.borde_imagen_accent);
+                            idPflege = "JA";
+                            break;
+                        case "JA":
+                            pflege.setAlpha(0.2f);
+                            idPflege = "PENDIENTE";
+                            break;
+                        case "PENDIENTE":
+                            pflege.setAlpha(1.0f);
+                            pflege.setBackgroundResource(R.drawable.borde_imagen_sin_filtro);
+                            idPflege = "sin filtro";
+                            break;
+                    }
+                    filtrar_tareas();
+                    break;
+            }
+
+        }
+    };
 
 }
