@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -57,6 +58,8 @@ public class FormularioDetalleFragment extends Fragment {
     private String idDecorar;
     private String idPflege;
 
+    private ArbeitDetail trabajoObtenido;
+
 
     public FormularioDetalleFragment() {
         // Required empty public constructor
@@ -71,6 +74,7 @@ public class FormularioDetalleFragment extends Fragment {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
         idTrabajadorActual = pref.getString("prefijo","?");
         idObjeto = getArguments().getString("idObjeto");
+        trabajoObtenido = new ArbeitDetail();
 
         grabname = (TextView) viewFragmento.findViewById(R.id.tvGrabname);
         friedhof = (TextView)viewFragmento.findViewById(R.id.tvFriedhof);
@@ -103,6 +107,7 @@ public class FormularioDetalleFragment extends Fragment {
         getView().findViewById(R.id.botonLimpiar).setOnClickListener(mGlobal_onClickListener);
         getView().findViewById(R.id.botonDecorar).setOnClickListener(mGlobal_onClickListener);
         getView().findViewById(R.id.botonPflege).setOnClickListener(mGlobal_onClickListener);
+        getView().findViewById(R.id.botonGuardar).setOnClickListener(mGlobal_onClickListener);
     }
 
     //Intents para cualquier botón de la actividad
@@ -173,7 +178,32 @@ public class FormularioDetalleFragment extends Fragment {
                         idPflege = idTrabajadorActual;
                     }
                     break;
+                case R.id.botonGuardar:
+                    //Guarda los datos en el servidor. 1:guarda en objeto 2:guarda objeto
 
+                    trabajoObtenido.setRecoger(idRecoger);
+                    trabajoObtenido.setTierra(idTierra);
+                    trabajoObtenido.setPlantar(idPlantar);
+                    trabajoObtenido.setRegar(idRegar);
+                    trabajoObtenido.setLimpiar(idLimpiar);
+                    trabajoObtenido.setDecorar(idDecorar);
+                    trabajoObtenido.setPflege(idPflege);
+
+                    Backendless.Persistence.save(trabajoObtenido, new AsyncCallback<ArbeitDetail>() {
+                        @Override
+                        public void handleResponse(ArbeitDetail arbeitDetail) {
+                            Toast.makeText(getContext(),"Grab " + arbeitDetail.getIdGrab() + " speichert",Toast.LENGTH_SHORT).show();
+                            getActivity().finish();
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+                            Toast.makeText(getContext(),"Grab nicht speichert. Error " + backendlessFault,Toast.LENGTH_SHORT).show();
+//                            getActivity().finish();
+                        }
+                    });
+
+                    break;
               }
         }
     };
@@ -183,6 +213,9 @@ public class FormularioDetalleFragment extends Fragment {
         Backendless.Persistence.of(ArbeitDetail.class).findById(idObjeto, new AsyncCallback<ArbeitDetail>() {
             @Override
             public void handleResponse(ArbeitDetail arbeitDetail) {
+
+                trabajoObtenido = arbeitDetail;
+
                 grabname.setText(arbeitDetail.getGrab().getGrabname());
                 friedhof.setText(arbeitDetail.getGrab().getFriedhof());
                 bemerkung.setText(arbeitDetail.getObservaciones());

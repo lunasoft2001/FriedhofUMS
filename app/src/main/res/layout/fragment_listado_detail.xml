@@ -5,23 +5,137 @@
              xmlns:app="http://schemas.android.com/apk/res-auto"
              tools:context="at.ums.luna.friedhofums.actividades.ListadoDetailFragment">
 
+
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
+
+
         <SearchView
             android:id="@+id/search_view_detail"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
         <ListView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
             android:id="@+id/miListView_detail">
 
 
         </ListView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="4dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:background="@drawable/borde_imagen_accent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="2dp"
+                android:id="@+id/tvTotalRegistro"/>
+
+            <ImageButton
+                android:layout_width="@dimen/botones_lista"
+                android:layout_height="@dimen/botones_lista"
+                android:id="@+id/botonRecoger"
+                android:src="@drawable/recoger"
+                android:scaleType="fitCenter"
+                android:background="@drawable/borde_imagen_sin_filtro"
+                android:padding="4dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"/>
+
+            <ImageButton
+                android:layout_width="@dimen/botones_lista"
+                android:layout_height="@dimen/botones_lista"
+                android:id="@+id/botonTierra"
+                android:src="@drawable/tierra"
+                android:scaleType="fitCenter"
+                android:background="@drawable/borde_imagen_sin_filtro"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:padding="4dp"/>
+
+            <ImageButton
+                android:layout_width="@dimen/botones_lista"
+                android:layout_height="@dimen/botones_lista"
+                android:id="@+id/botonPlantar"
+                android:src="@drawable/plantar"
+                android:scaleType="fitCenter"
+                android:background="@drawable/borde_imagen_sin_filtro"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:padding="4dp"/>
+
+            <ImageButton
+                android:layout_width="@dimen/botones_lista"
+                android:layout_height="@dimen/botones_lista"
+                android:id="@+id/botonRegar"
+                android:src="@drawable/regar"
+                android:scaleType="fitCenter"
+                android:background="@drawable/borde_imagen_sin_filtro"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:padding="4dp"/>
+
+            <ImageButton
+                android:layout_width="@dimen/botones_lista"
+                android:layout_height="@dimen/botones_lista"
+                android:id="@+id/botonLimpiar"
+                android:src="@drawable/limpiar"
+                android:scaleType="fitCenter"
+                android:background="@drawable/borde_imagen_sin_filtro"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:padding="4dp"/>
+
+            <ImageButton
+                android:layout_width="@dimen/botones_lista"
+                android:layout_height="@dimen/botones_lista"
+                android:id="@+id/botonDecorar"
+                android:src="@drawable/decorar"
+                android:scaleType="fitCenter"
+                android:background="@drawable/borde_imagen_sin_filtro"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:padding="4dp"/>
+
+            <ImageButton
+                android:layout_width="@dimen/botones_lista"
+                android:layout_height="@dimen/botones_lista"
+                android:id="@+id/botonPflege"
+                android:src="@drawable/pflege"
+                android:scaleType="fitCenter"
+                android:background="@drawable/borde_imagen_sin_filtro"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:padding="4dp"/>
+
+
+        </LinearLayout>
 
 
     </LinearLayout>

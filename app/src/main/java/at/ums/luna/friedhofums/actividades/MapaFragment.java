@@ -67,15 +67,15 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         filtro = getArguments().getString("filtro");
         argumentos = getArguments().getStringArray("argumentos");
 
-        db = new OperacionesBaseDatos(getContext());
-        mListaTumbas = db.verListaGrabFiltrada(filtro, argumentos);
-
-        miLatitud = mListaTumbas.get(1).getLatitud();
-        miLongitud = mListaTumbas.get(1).getLongitud();
-
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+//        db = new OperacionesBaseDatos(getContext());
+//        mListaTumbas = db.verListaGrabFiltrada(filtro, argumentos);
+//
+//        miLatitud = mListaTumbas.get(1).getLatitud();
+//        miLongitud = mListaTumbas.get(1).getLongitud();
+//
+//        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
 
 
         return view;
@@ -92,7 +92,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         }
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(miLatitud,miLongitud),20));
         mMap.setOnMarkerDragListener(this);
 
@@ -103,6 +103,24 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         for (int x= 0; x<mListaTumbas.size();x++ ) {
             mMap.addMarker(agregarMarca(mListaTumbas.get(x)));
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        db = new OperacionesBaseDatos(getContext());
+        mListaTumbas = db.verListaGrabFiltrada(filtro, argumentos);
+
+        miLatitud = mListaTumbas.get(1).getLatitud();
+        miLongitud = mListaTumbas.get(1).getLongitud();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+
 
     }
 
