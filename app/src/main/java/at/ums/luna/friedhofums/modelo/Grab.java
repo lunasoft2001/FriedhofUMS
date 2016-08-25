@@ -5,6 +5,8 @@ import android.content.Intent;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
+import java.io.Serializable;
+
 import at.ums.luna.friedhofums.R;
 
 /**

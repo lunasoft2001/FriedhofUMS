@@ -1,6 +1,7 @@
 package at.ums.luna.friedhofums.actividades;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -18,24 +19,61 @@ import java.util.List;
 
 import at.ums.luna.friedhofums.R;
 import at.ums.luna.friedhofums.modelo.Grab;
+import at.ums.luna.friedhofums.modelo.GrabList;
 import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 
-public class ListadoTumbas extends AppCompatActivity {
+public class ListadoTumbas extends AppCompatActivity implements ListadoTumbasFragment.OnHeadlineSelectedListener {
 
     private int MODO;
+
+    private boolean primeraVez;
+
+    private ListadoTumbasFragment listadoTumbasFragment;
+    private MapaFragment mapaFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado_tumbas);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         MODO = getIntent().getIntExtra("modo",1);
+        primeraVez = true;
 
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new AdaptadorPager(getSupportFragmentManager()));
 
 
     }
+
+    /**
+     * para recibir y enviar informacion a los fragmentos
+     * @param lista
+     */
+    @Override
+    public void onListaObtenida(GrabList lista) {
+
+        if (primeraVez) {
+            Log.i("MENSAJES", "---- PRIMERA VEZ ----");
+            Log.i("MENSAJES","Enviando lista con " + lista.getGrabList().size() + " registros.");
+            mapaFragment.recibeListadoTumbas(lista);
+            primeraVez = false;
+        } else {
+            Log.i("MENSAJES", "---- SEGUNDA VEZ ----");
+            Log.i("MENSAJES","Enviando lista con " + lista.getGrabList().size() + " registros.");
+            mapaFragment.borrarMarcas();
+            mapaFragment.recibeListadoTumbas(lista);
+            mapaFragment.actualizaMarcas();
+        }
+
+
+
+    }
+
+    /**
+     * Fin enviar informacion entre fragmentos
+     */
 
     private class AdaptadorPager extends FragmentPagerAdapter {
 
@@ -74,13 +112,13 @@ public class ListadoTumbas extends AppCompatActivity {
 
             switch (position) {
                 case 0:
-                    ListadoTumbasFragment f1 = new ListadoTumbasFragment();
-                    f1.setArguments(args);
-                    return f1;
+                    listadoTumbasFragment = new ListadoTumbasFragment();
+                    listadoTumbasFragment.setArguments(args);
+                    return listadoTumbasFragment;
                 case 1:
-                    MapaFragment f2 = new MapaFragment();
-                    f2.setArguments(args);
-                    return f2;
+                    mapaFragment = new MapaFragment();
+                    mapaFragment.setArguments(args);
+                    return mapaFragment;
                 default:
                     return null;
             }

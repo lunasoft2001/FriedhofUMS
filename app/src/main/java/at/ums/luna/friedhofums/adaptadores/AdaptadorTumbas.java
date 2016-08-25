@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import at.ums.luna.friedhofums.R;
+import at.ums.luna.friedhofums.actividades.ListadoTumbasFragment;
 import at.ums.luna.friedhofums.modelo.Grab;
 
 /**
@@ -68,7 +69,6 @@ public class AdaptadorTumbas extends BaseAdapter implements Filterable {
         holder.tvidGrab.setText(grabArrayList.get(position).getIdGrab());
         holder.tvGrabname.setText(grabArrayList.get(position).getGrabname());
         holder.tvTlf1.setText(grabArrayList.get(position).getTelefon1());
-
         return convertView;
 
     }
@@ -109,8 +109,6 @@ public class AdaptadorTumbas extends BaseAdapter implements Filterable {
                                 resultados.add(g);
                         }
                     }
-
-
 
                     oReturn.values = resultados;
                 }

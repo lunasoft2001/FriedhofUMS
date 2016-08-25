@@ -12,11 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.exceptions.ExceptionMessage;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.QueryOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,12 +30,14 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.R;
 import at.ums.luna.friedhofums.modelo.Grab;
+import at.ums.luna.friedhofums.modelo.GrabList;
 import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 
 /**
@@ -63,19 +67,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_mapa, null, false);
-
+        db = new OperacionesBaseDatos(getContext());
         filtro = getArguments().getString("filtro");
         argumentos = getArguments().getStringArray("argumentos");
-
-//        db = new OperacionesBaseDatos(getContext());
-//        mListaTumbas = db.verListaGrabFiltrada(filtro, argumentos);
-//
-//        miLatitud = mListaTumbas.get(1).getLatitud();
-//        miLongitud = mListaTumbas.get(1).getLongitud();
-//
-//        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
 
 
         return view;
@@ -96,22 +90,21 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(miLatitud,miLongitud),20));
         mMap.setOnMarkerDragListener(this);
 
+      actualizaMarcas();
 
+    }
 
-        //obtenemos la lista
-
+    public void actualizaMarcas() {
         for (int x= 0; x<mListaTumbas.size();x++ ) {
             mMap.addMarker(agregarMarca(mListaTumbas.get(x)));
         }
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        db = new OperacionesBaseDatos(getContext());
-        mListaTumbas = db.verListaGrabFiltrada(filtro, argumentos);
+//        mListaTumbas = db.verListaGrabFiltrada(filtro, argumentos);
 
         miLatitud = mListaTumbas.get(1).getLatitud();
         miLongitud = mListaTumbas.get(1).getLongitud();
@@ -119,8 +112,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
 
     }
 
@@ -142,7 +133,14 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         double nuevaLatitud =  marker.getPosition().latitude;
         double nuevaLongitud = marker.getPosition().longitude;
 
-        db.actualizaCoordenadasTumba(codigoObtenido,nuevaLatitud,nuevaLongitud);
+        try {
+            db.actualizaCoordenadasTumba(codigoObtenido,nuevaLatitud,nuevaLongitud);
+        }catch(Exception e){
+            Log.i("MENSAJES", e.toString());
+            Toast.makeText(getContext(),"Error. Position nicht gespeichert",Toast.LENGTH_SHORT).show();
+        }
+
+
 
     }
 
@@ -175,5 +173,22 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         return (int) (Radius * c);
 
     }
+
+
+    /**
+     * recibe de la activity
+     **/
+    public void recibeListadoTumbas (GrabList grabList){
+
+        mListaTumbas = grabList.getGrabList();
+    }
+
+    public void borrarMarcas(){
+        mMap.clear();
+    }
+
+    /**
+     * fin de recepcion
+     */
 
 }

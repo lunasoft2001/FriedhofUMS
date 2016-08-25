@@ -1,5 +1,6 @@
 package at.ums.luna.friedhofums.actividades;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.R;
 import at.ums.luna.friedhofums.adaptadores.AdaptadorTumbas;
 import at.ums.luna.friedhofums.modelo.Grab;
+import at.ums.luna.friedhofums.modelo.GrabList;
 import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 
 /**
@@ -37,13 +39,48 @@ import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
  */
 public class ListadoTumbasFragment extends Fragment implements SearchView.OnQueryTextListener{
 
+    private View viewFragmento;
     private ListView mListViewTumbas;
-    private ArrayList<Grab> mListaTumbas;
+    public ArrayList<Grab> mListaTumbas;
     private Context esteContexto;
     private AdaptadorTumbas adaptadorTumbas;
     private String filtro;
     private String[] argumentos;
     private SearchView mSearchView;
+
+    /**
+     * codigo para pasar datos entre fragmentos
+     */
+
+    OnHeadlineSelectedListener mCallBack;
+
+    public interface OnHeadlineSelectedListener {
+        public void onListaObtenida(GrabList lista);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallBack = (OnHeadlineSelectedListener) activity;
+        }catch (ClassCastException e){
+            throw new ClassCastException(activity.toString()
+                + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+    public void enviaAFragmento(ArrayList<Grab> lista){
+
+        GrabList gl = new GrabList();
+        gl.setGrabList(lista);
+        mCallBack.onListaObtenida(gl);
+
+    }
+
+    /**
+     * Fin codigo
+     */
+
 
     public ListadoTumbasFragment() {
         // Required empty public constructor
@@ -55,7 +92,7 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         esteContexto = getContext();
-        View viewFragmento = inflater.inflate(R.layout.fragment_listado_tumbas, container, false);
+        viewFragmento = inflater.inflate(R.layout.fragment_listado_tumbas, container, false);
 
         mSearchView = (SearchView) viewFragmento.findViewById(R.id.search_view);
         mListViewTumbas = (ListView) viewFragmento.findViewById(R.id.miListView);
@@ -63,8 +100,14 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
         filtro = getArguments().getString("filtro");
         argumentos = getArguments().getStringArray("argumentos");
 
-        return obtenerListadoTumbas(viewFragmento);
+        return viewFragmento;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        obtenerListadoTumbas(viewFragmento);
     }
 
     @Override
@@ -79,6 +122,15 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
         mListaTumbas = new ArrayList<Grab>();
         OperacionesBaseDatos db = new OperacionesBaseDatos(esteContexto);
         mListaTumbas =  db.verListaGrabFiltrada(filtro,argumentos);
+
+        /**
+         * enviar a fragmento
+         */
+
+        enviaAFragmento(mListaTumbas);
+        /**
+         * fin enviar a fragmento
+         */
 
         adaptadorTumbas = new AdaptadorTumbas(esteContexto,mListaTumbas);
         mListViewTumbas.setAdapter(adaptadorTumbas);
@@ -114,12 +166,14 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
     private void setupSearchView(){
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
-        // mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setQueryHint("Suchen hear");
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+
+        enviaAFragmento(adaptadorTumbas.grabArrayList);
         return false;
     }
 
@@ -129,11 +183,10 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
             mListViewTumbas.clearTextFilter();
         } else {
             mListViewTumbas.setFilterText(newText.toString());
+
         }
 
         clickEnLista();
-
-
         return true;
     }
 
@@ -210,10 +263,6 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
 //
 //        return viewFragmento;
 //    }
-
-
-
-
 
 
 }
