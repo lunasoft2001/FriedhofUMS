@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.SearchView;
@@ -43,7 +44,7 @@ import at.ums.luna.friedhofums.modelo.ArbeitKopf;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ListadoDetailFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class ListadoDetailFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener{
 
     private ListView mListViewDetail;
     private ArrayList<ArbeitDetail> mListaDetalle;
@@ -54,6 +55,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
     private SearchView mSearchView;
     private int totalRegistro = 0;
     private ProgressDialog progress;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private String idRecoger = "sin filtro";
     private String idTierra = "sin filtro";
@@ -106,6 +108,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         decorar = (ImageButton)viewFragmento.findViewById(R.id.botonDecorar);
         pflege = (ImageButton)viewFragmento.findViewById(R.id.botonPflege);
         tvTotalRegistro = (TextView)viewFragmento.findViewById(R.id.tvTotalRegistro);
+        swipeRefreshLayout = (SwipeRefreshLayout) viewFragmento.findViewById(R.id.swipe_refresh_layout);
 
         return viewFragmento;
 
@@ -131,13 +134,31 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         getView().findViewById(R.id.botonDecorar).setOnClickListener(mGlobal_onClickListener);
         getView().findViewById(R.id.botonPflege).setOnClickListener(mGlobal_onClickListener);
 
+
+        /**
+         * Mostramos la animacion de Swipe Refresh al crear la actitvity
+         */
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                filtrar_tareas();
+            }
+        });
+
+
+
+    }
+
+    @Override
+    public void onRefresh() {
+        filtrar_tareas();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        new obtenerListadoDetalleAsync().execute();
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 
     }
 
@@ -195,13 +216,14 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         protected void onPreExecute() {
             super.onPreExecute();
             mListaDetalle = new ArrayList<>();
-            progress = new ProgressDialog(getContext());
-            progress.setTitle("Server Verbindung");
-            progress.setMessage("Herunterladend...");
-            progress.setProgressStyle(progress.STYLE_HORIZONTAL);
-            progress.setProgress(0);
-            progress.setMax(100);
-            progress.show();
+            swipeRefreshLayout.setRefreshing(true);
+//            progress = new ProgressDialog(getContext());
+//            progress.setTitle("Server Verbindung");
+//            progress.setMessage("Herunterladend...");
+//            progress.setProgressStyle(progress.STYLE_HORIZONTAL);
+//            progress.setProgress(0);
+//            progress.setMax(100);
+//            progress.show();
 
 
         }
@@ -223,7 +245,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
             arbeitDetailobtenidos = Backendless.Persistence.of(ArbeitDetail.class).find(dataQuery);
 
             totalRegistro = arbeitDetailobtenidos.getTotalObjects();
-            progress.setMax(totalRegistro);
+//            progress.setMax(totalRegistro);
 
 
             int size = arbeitDetailobtenidos.getCurrentPage().size();
@@ -234,30 +256,31 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                 for (ArbeitDetail tl  : arbeitDetailobtenidos.getCurrentPage()){
                     mListaDetalle.add(tl);
 
-                    progress.incrementProgressBy(1);
+//                    progress.incrementProgressBy(1);
                 }
                 offset+=size;
                 arbeitDetailobtenidos.getCurrentPage();
                 size = arbeitDetailobtenidos.getCurrentPage().size();
             }
 
-            publishProgress();
+//            publishProgress();
             return totalRegistro;
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            if(progress.getProgress() < progress.getMax()) {
-                progress.setProgress(values[0]);
-            }
+//            if(progress.getProgress() < progress.getMax()) {
+//                progress.setProgress(values[0]);
+//            }
         }
 
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
 
-            progress.dismiss();
+//            progress.dismiss();
+            swipeRefreshLayout.setRefreshing(false);
 
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -308,7 +331,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                             idRecoger = "sin filtro";
                             break;
                     }
-                    filtrar_tareas();
+                    //filtrar_tareas();
                     break;
                 case R.id.botonTierra:
                     switch (idTierra){
@@ -326,7 +349,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                             idTierra = "sin filtro";
                             break;
                     }
-                    filtrar_tareas();
+                    //filtrar_tareas();
                     break;
                 case R.id.botonPlantar:
                     switch (idPlantar){
@@ -344,7 +367,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                             idPlantar = "sin filtro";
                             break;
                     }
-                    filtrar_tareas();
+                    //filtrar_tareas();
                     break;
                 case R.id.botonRegar:
                     switch (idRegar){
@@ -362,7 +385,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                             idRegar = "sin filtro";
                             break;
                     }
-                    filtrar_tareas();
+                    //filtrar_tareas();
                     break;
                 case R.id.botonLimpiar:
                     switch (idLimpiar){
@@ -380,7 +403,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                             idLimpiar = "sin filtro";
                             break;
                     }
-                    filtrar_tareas();
+                    //filtrar_tareas();
                     break;
                 case R.id.botonDecorar:
                     switch (idDecorar){
