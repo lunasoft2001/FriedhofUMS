@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -33,12 +34,23 @@ import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 
 public class MiPosicion extends Activity {
 
-    TextView mensaje1;
-    TextView mensaje2;
+    TextView tvIdGrab;
+    TextView tvGrabname;
+    TextView tvGrabart;
+    TextView tvFriedhof;
+    TextView tvFeld;
+    TextView tvReihe;
+    TextView tvNummer;
+    TextView tvKunde;
+    TextView tvTelefon1;
+    TextView tvTelefon2;
+    TextView tvBemerkung;
     Button botonGuardar;
 
     double miLatitud;
     double miLongitud;
+
+    Grab tumbaObtenida;
 
     Localizacion Local;
 
@@ -49,9 +61,21 @@ public class MiPosicion extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mi_posicion);
 
-        mensaje1 = (TextView) findViewById(R.id.mensaje_id);
-        mensaje2 = (TextView) findViewById(R.id.mensaje_id2);
+        tvIdGrab = (TextView) findViewById(R.id.tvIdGrab);
+        tvGrabname = (TextView) findViewById(R.id.tvGrabname);
+        tvGrabart = (TextView) findViewById(R.id.tvGrabart);
+        tvFriedhof = (TextView) findViewById(R.id.tvFriedhof);
+        tvFeld = (TextView) findViewById(R.id.tvFeld);
+        tvReihe = (TextView) findViewById(R.id.tvReihe);
+        tvNummer = (TextView) findViewById(R.id.tvNummer);
+        tvKunde = (TextView) findViewById(R.id.tvKunde);
+        tvTelefon1 = (TextView) findViewById(R.id.tvTelefon1);
+        tvTelefon2 = (TextView) findViewById(R.id.tvTelefon2);
+        tvBemerkung = (TextView) findViewById(R.id.tvBemerkung);
         botonGuardar = (Button) findViewById(R.id.botonGuaardaPosicion);
+
+        obtenerTumba();
+
         busca();
 
 
@@ -66,12 +90,9 @@ public class MiPosicion extends Activity {
             return;
         }
 
-
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
                 Local);
 
-        mensaje1.setText("Buscando localizacion");
-        mensaje2.setText("");
     }
 
 
@@ -103,13 +124,12 @@ public class MiPosicion extends Activity {
         @Override
         public void onProviderDisabled(String provider) {
             // Este metodo se ejecuta cuando el GPS es desactivado
-            mensaje1.setText("GPS Desactivado");
+
         }
 
         @Override
         public void onProviderEnabled(String provider) {
             // Este metodo se ejecuta cuando el GPS es activado
-            mensaje1.setText("GPS Activado");
         }
 
         @Override
@@ -136,20 +156,7 @@ public class MiPosicion extends Activity {
         super.onPause();
     }
 
-
     public void guardaCoordenadas(View v){
-
-
-        String codigoObtenido =  getIntent().getStringExtra("idGrab");
-        String whereClause = "idGrab = '" + codigoObtenido + "'";
-        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
-        dataQuery.setWhereClause(whereClause);
-        Backendless.Persistence.of(Grab.class).find(dataQuery, new AsyncCallback<BackendlessCollection<Grab>>() {
-            @Override
-            public void handleResponse(BackendlessCollection<Grab> grabBackendlessCollection) {
-                final Grab tumbaObtenida = grabBackendlessCollection.getCurrentPage().get(0);
-
-                Log.i("MENSAJES", tumbaObtenida.getIdGrab() + " " + tumbaObtenida.getGrabname());
 
                 tumbaObtenida.setLatitud(miLatitud);
                 tumbaObtenida.setLongitud(miLongitud);
@@ -168,6 +175,37 @@ public class MiPosicion extends Activity {
                     }
                 });
 
+        OperacionesBaseDatos db = new OperacionesBaseDatos(this);
+        db.actualizaCoordenadasTumba(tumbaObtenida.getIdGrab(),miLatitud,miLongitud);
+
+        Toast.makeText(this,"Grab gespeichert",Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    public void obtenerTumba(){
+
+        String codigoObtenido =  getIntent().getStringExtra("idGrab");
+        String whereClause = "idGrab = '" + codigoObtenido + "'";
+        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+        dataQuery.setWhereClause(whereClause);
+        Backendless.Persistence.of(Grab.class).find(dataQuery, new AsyncCallback<BackendlessCollection<Grab>>() {
+            @Override
+            public void handleResponse(BackendlessCollection<Grab> grabBackendlessCollection) {
+                tumbaObtenida = grabBackendlessCollection.getCurrentPage().get(0);
+
+                tvIdGrab.setText(tumbaObtenida.getIdGrab());
+                tvGrabname.setText(tumbaObtenida.getGrabname());
+                tvGrabart.setText(tumbaObtenida.getGrabart());
+                tvFriedhof.setText(tumbaObtenida.getFriedhof());
+                tvFeld.setText(tumbaObtenida.getFeld());
+                tvReihe.setText(tumbaObtenida.getReihe());
+                tvNummer.setText(tumbaObtenida.getNummer());
+                tvKunde.setText(tumbaObtenida.getKunde());
+                tvTelefon1.setText(tumbaObtenida.getTelefon1());
+                tvTelefon2.setText(tumbaObtenida.getTelefon2());
+                tvBemerkung.setText(tumbaObtenida.getBemerkung());
+
             }
 
             @Override
@@ -175,12 +213,6 @@ public class MiPosicion extends Activity {
 
             }
         });
-
-        OperacionesBaseDatos db = new OperacionesBaseDatos(this);
-        db.actualizaCoordenadasTumba(codigoObtenido,miLatitud,miLongitud);
-
-        mensaje1.setText("Posicion guardada");
-
     }
 
 }

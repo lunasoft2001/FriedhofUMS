@@ -90,7 +90,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(miLatitud,miLongitud),20));
         mMap.setOnMarkerDragListener(this);
 
-      actualizaMarcas();
+//      actualizaMarcas();
 
     }
 

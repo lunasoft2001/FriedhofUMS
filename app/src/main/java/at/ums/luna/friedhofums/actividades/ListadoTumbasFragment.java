@@ -100,14 +100,15 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
         filtro = getArguments().getString("filtro");
         argumentos = getArguments().getStringArray("argumentos");
 
-        return viewFragmento;
+
+        return obtenerListadoTumbas(viewFragmento);
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        obtenerListadoTumbas(viewFragmento);
+
     }
 
     @Override
@@ -167,7 +168,7 @@ public class ListadoTumbasFragment extends Fragment implements SearchView.OnQuer
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setSubmitButtonEnabled(true);
-        mSearchView.setQueryHint("Suchen hear");
+        mSearchView.setQueryHint("Suchen hier");
     }
 
     @Override
