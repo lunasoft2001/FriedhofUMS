@@ -110,6 +110,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         tvTotalRegistro = (TextView)viewFragmento.findViewById(R.id.tvTotalRegistro);
         swipeRefreshLayout = (SwipeRefreshLayout) viewFragmento.findViewById(R.id.swipe_refresh_layout);
 
+
         return viewFragmento;
 
     }
@@ -135,6 +136,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         getView().findViewById(R.id.botonPflege).setOnClickListener(mGlobal_onClickListener);
 
 
+        swipeRefreshLayout.setOnRefreshListener(this);
         /**
          * Mostramos la animacion de Swipe Refresh al crear la actitvity
          */
@@ -421,7 +423,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                             idDecorar = "sin filtro";
                             break;
                     }
-                    filtrar_tareas();
+                    //filtrar_tareas();
                     break;
                 case R.id.botonPflege:
                     switch (idPflege){
@@ -439,7 +441,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                             idPflege = "sin filtro";
                             break;
                     }
-                    filtrar_tareas();
+                    //filtrar_tareas();
                     break;
             }
 
