@@ -44,6 +44,9 @@ public class ListadoTumbas extends AppCompatActivity implements ListadoTumbasFra
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new AdaptadorPager(getSupportFragmentManager()));
 
+        listadoTumbasFragment = new ListadoTumbasFragment();
+        mapaFragment = new MapaFragment();
+
 
     }
 
@@ -112,11 +115,9 @@ public class ListadoTumbas extends AppCompatActivity implements ListadoTumbasFra
 
             switch (position) {
                 case 0:
-                    listadoTumbasFragment = new ListadoTumbasFragment();
                     listadoTumbasFragment.setArguments(args);
                     return listadoTumbasFragment;
                 case 1:
-                    mapaFragment = new MapaFragment();
                     mapaFragment.setArguments(args);
                     return mapaFragment;
                 default:

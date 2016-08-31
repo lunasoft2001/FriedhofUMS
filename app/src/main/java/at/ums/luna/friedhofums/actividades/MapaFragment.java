@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -43,7 +44,7 @@ import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapaFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
+public class MapaFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener{
 
     private GoogleMap mMap;
     double miLatitud;
@@ -52,6 +53,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
 
     private String filtro;
     private String[] argumentos;
+
+    private SupportMapFragment mapFragment;
+
 
 
     OperacionesBaseDatos db;
@@ -86,7 +90,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         }
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setCompassEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(miLatitud,miLongitud),20));
         mMap.setOnMarkerDragListener(this);
 
@@ -106,10 +110,10 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
 
 //        mListaTumbas = db.verListaGrabFiltrada(filtro, argumentos);
 
-        miLatitud = mListaTumbas.get(1).getLatitud();
-        miLongitud = mListaTumbas.get(1).getLongitud();
+        miLatitud = mListaTumbas.get(0).getLatitud();
+        miLongitud = mListaTumbas.get(0).getLongitud();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
+        mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -139,12 +143,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
             Log.i("MENSAJES", e.toString());
             Toast.makeText(getContext(),"Error. Position nicht gespeichert",Toast.LENGTH_SHORT).show();
         }
-
-
-
     }
-
-
 
 
 

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ public class FormularioDetalleFragment extends Fragment {
     private ImageButton limpiar;
     private ImageButton decorar;
     private ImageButton pflege;
+    private EditText observacionesMitarbeiter;
 
     private String idRecoger;
     private String idTierra;
@@ -88,6 +90,7 @@ public class FormularioDetalleFragment extends Fragment {
         limpiar = (ImageButton)viewFragmento.findViewById(R.id.botonLimpiar);
         decorar = (ImageButton)viewFragmento.findViewById(R.id.botonDecorar);
         pflege = (ImageButton)viewFragmento.findViewById(R.id.botonPflege);
+        observacionesMitarbeiter = (EditText)viewFragmento.findViewById(R.id.etObservacionMitarbeiter);
 
         obtenerDatos();
 
@@ -108,6 +111,9 @@ public class FormularioDetalleFragment extends Fragment {
         getView().findViewById(R.id.botonDecorar).setOnClickListener(mGlobal_onClickListener);
         getView().findViewById(R.id.botonPflege).setOnClickListener(mGlobal_onClickListener);
         getView().findViewById(R.id.botonGuardar).setOnClickListener(mGlobal_onClickListener);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
     }
 
     //Intents para cualquier botón de la actividad
@@ -188,6 +194,7 @@ public class FormularioDetalleFragment extends Fragment {
                     trabajoObtenido.setLimpiar(idLimpiar);
                     trabajoObtenido.setDecorar(idDecorar);
                     trabajoObtenido.setPflege(idPflege);
+                    trabajoObtenido.setComentarioMitarbeiter(observacionesMitarbeiter.getText().toString());
 
                     Backendless.Persistence.save(trabajoObtenido, new AsyncCallback<ArbeitDetail>() {
                         @Override
@@ -221,6 +228,8 @@ public class FormularioDetalleFragment extends Fragment {
                 bemerkung.setText(arbeitDetail.getObservaciones());
                 detalle.setText(arbeitDetail.getDetalle());
                 grabart.setImageResource(arbeitDetail.getGrab().rutaDeIcono());
+                observacionesMitarbeiter.setText(arbeitDetail.getComentarioMitarbeiter());
+
 
                 idRecoger = arbeitDetail.getRecoger();
                 idTierra = arbeitDetail.getTierra();

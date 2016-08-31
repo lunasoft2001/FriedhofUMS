@@ -168,8 +168,24 @@
                 android:layout_marginTop="16dp"
                 android:id="@+id/linLayBotones4"
                 android:layout_below="@+id/linLayBotones3"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:gravity="center_horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/etObservacionMitarbeiter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Mitarbeiter Bemerkung"
+                        android:phoneNumber="false"
+                        android:password="false"
+                        android:inputType="textMultiLine"/>
+
+                </android.support.design.widget.TextInputLayout>
+
 
                 <Button
                     android:layout_width="wrap_content"

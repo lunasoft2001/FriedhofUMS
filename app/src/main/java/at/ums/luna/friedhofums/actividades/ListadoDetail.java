@@ -8,12 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+
 import at.ums.luna.friedhofums.R;
 
 public class ListadoDetail extends AppCompatActivity {
 
     private int MODO;
     private String idTarea;
+
+    private MapaDetailFragment mapaDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +28,16 @@ public class ListadoDetail extends AppCompatActivity {
         MODO = getIntent().getIntExtra("MODO",1);
         idTarea = getIntent().getStringExtra("idTarea");
 
+        mapaDetailFragment = new MapaDetailFragment();
+
+
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new AdaptadorPager(getSupportFragmentManager()));
 
+
+
     }
+
 
     private class AdaptadorPager extends FragmentPagerAdapter {
 
@@ -76,9 +87,8 @@ public class ListadoDetail extends AppCompatActivity {
                     f1.setArguments(args);
                     return f1;
                 case 1:
-                    MapaDetailFragment f2 = new MapaDetailFragment();
-                    f2.setArguments(args);
-                    return f2;
+                    mapaDetailFragment.setArguments(args);
+                    return mapaDetailFragment;
                 default:
                     return null;
             }

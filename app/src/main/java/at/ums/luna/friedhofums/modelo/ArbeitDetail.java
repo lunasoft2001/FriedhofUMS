@@ -23,6 +23,7 @@ public class ArbeitDetail{
     private String limpiar;
     private String decorar;
     private int cantidad;
+    private String comentarioMitarbeiter;
 
 
     public ArbeitDetail() {
@@ -30,7 +31,7 @@ public class ArbeitDetail{
 
     public ArbeitDetail(String objectId, String detalle, Grab grab, String idGrab, String tierra,
                         String recoger, String regar, String plantar, String pflege,
-                        String observaciones, String limpiar, String decorar, int cantidad) {
+                        String observaciones, String limpiar, String decorar, String comentarioMitarbeiter, int cantidad) {
         this.objectId = objectId;
         this.detalle = detalle;
         this.grab = grab;
@@ -44,6 +45,7 @@ public class ArbeitDetail{
         this.limpiar = limpiar;
         this.decorar = decorar;
         this.cantidad = cantidad;
+        this.comentarioMitarbeiter = comentarioMitarbeiter;
     }
 
     public String getObjectId() {
@@ -148,6 +150,14 @@ public class ArbeitDetail{
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public String getComentarioMitarbeiter() {
+        return comentarioMitarbeiter;
+    }
+
+    public void setComentarioMitarbeiter(String comentarioMitarbeiter) {
+        this.comentarioMitarbeiter = comentarioMitarbeiter;
     }
 
     /**
