@@ -3,7 +3,9 @@ package at.ums.luna.friedhofums.actividades;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -109,12 +111,21 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
     private View obtenerListadoTareas(View viewFragmento) {
         mListaTareas = new ArrayList<>();
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        String idTrabajadorActual = pref.getString("prefijo","?");
+
+
+        String whereClause = "terminado = False and mitarbeiter = '" + idTrabajadorActual + "'";
+        whereClause = whereClause + " or terminado = False and mitarbeiter = ''";
+
 
         final int PAGESIZE = 100;
         BackendlessDataQuery dataQuery = new BackendlessDataQuery();
         QueryOptions queryOptions = new QueryOptions();
         queryOptions.setPageSize(PAGESIZE);
         queryOptions.addSortByOption("title ASC");
+        dataQuery.setWhereClause(whereClause);
         dataQuery.setQueryOptions(queryOptions);
 
 

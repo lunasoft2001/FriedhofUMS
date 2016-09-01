@@ -3,6 +3,7 @@ package at.ums.luna.friedhofums.actividades;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -26,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -37,6 +40,7 @@ import java.util.List;
 
 import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.R;
+import at.ums.luna.friedhofums.modelo.ArbeitDetail;
 import at.ums.luna.friedhofums.modelo.Grab;
 import at.ums.luna.friedhofums.modelo.GrabList;
 import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
@@ -44,9 +48,9 @@ import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapaFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener{
+public class MapaFragment extends Fragment implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener, AdapterView.OnItemSelectedListener{
 
-    private GoogleMap mMap;
     double miLatitud;
     double miLongitud;
     private List<Grab> mListaTumbas;
@@ -55,8 +59,18 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
     private String[] argumentos;
 
     private SupportMapFragment mapFragment;
+    private GoogleMap mMap;
+    private Spinner mMapTypeSelector;
 
+    private String tocado = "NO";
 
+    private int mMapTypes[] = {
+            GoogleMap.MAP_TYPE_NONE,
+            GoogleMap.MAP_TYPE_NORMAL,
+            GoogleMap.MAP_TYPE_SATELLITE,
+            GoogleMap.MAP_TYPE_HYBRID,
+            GoogleMap.MAP_TYPE_TERRAIN
+    };
 
     OperacionesBaseDatos db;
 
@@ -74,6 +88,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         db = new OperacionesBaseDatos(getContext());
         filtro = getArguments().getString("filtro");
         argumentos = getArguments().getStringArray("argumentos");
+
+        mMapTypeSelector = (Spinner) view.findViewById(R.id.map_type_selector);
+        mMapTypeSelector.setOnItemSelectedListener(this);
 
 
         return view;
@@ -94,6 +111,12 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(miLatitud,miLongitud),20));
         mMap.setOnMarkerDragListener(this);
 
+        CameraPosition oldPos = mMap.getCameraPosition();
+        CameraPosition pos = CameraPosition.builder(oldPos).bearing(60).build();
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
+
+        mMap.setOnMarkerClickListener(this);
+
 //      actualizaMarcas();
 
     }
@@ -105,13 +128,38 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        if (tocado.equals(marker.getTitle())) {
+            tocado.equals("NO");
+
+            Intent intento = new Intent(getContext(), MiPosicion.class);
+            intento.putExtra("idGrab",marker.getTitle());
+            startActivity(intento);
+        } else {
+            tocado = marker.getTitle();
+            Toast.makeText(getContext(),"Noch click für Detail sehen", Toast.LENGTH_SHORT).show();
+        }
+
+        return false;
+    }
+
+
+    @Override
     public void onResume() {
         super.onResume();
 
 //        mListaTumbas = db.verListaGrabFiltrada(filtro, argumentos);
 
-        miLatitud = mListaTumbas.get(0).getLatitud();
-        miLongitud = mListaTumbas.get(0).getLongitud();
+        if (mListaTumbas == null) {
+            miLatitud = 47.061528;
+            miLongitud = 15.459081;
+        } else {
+            miLatitud = mListaTumbas.get(0).getLatitud();
+            miLongitud = mListaTumbas.get(0).getLongitud();
+        }
+
+
 
         mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -172,6 +220,20 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback, Google
         return (int) (Radius * c);
 
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        mMap.setMapType(mMapTypes[position]);
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+
+
 
 
     /**

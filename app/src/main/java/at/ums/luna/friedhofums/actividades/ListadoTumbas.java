@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.OrientationEventListener;
 
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -41,12 +42,11 @@ public class ListadoTumbas extends AppCompatActivity implements ListadoTumbasFra
         MODO = getIntent().getIntExtra("modo",1);
         primeraVez = true;
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(new AdaptadorPager(getSupportFragmentManager()));
-
         listadoTumbasFragment = new ListadoTumbasFragment();
         mapaFragment = new MapaFragment();
 
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(new AdaptadorPager(getSupportFragmentManager()));
 
     }
 

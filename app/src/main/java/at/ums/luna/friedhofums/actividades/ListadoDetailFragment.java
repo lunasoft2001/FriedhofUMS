@@ -1,6 +1,7 @@
 package at.ums.luna.friedhofums.actividades;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,8 @@ import at.ums.luna.friedhofums.adaptadores.AdaptadorArbeitDetalle;
 import at.ums.luna.friedhofums.adaptadores.AdaptadorArbeitKopf;
 import at.ums.luna.friedhofums.modelo.ArbeitDetail;
 import at.ums.luna.friedhofums.modelo.ArbeitKopf;
+import at.ums.luna.friedhofums.modelo.Grab;
+import at.ums.luna.friedhofums.modelo.GrabList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,6 +78,42 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
     private TextView tvTotalRegistro;
 
     private View viewFragmento;
+
+    /**
+     * codigo para pasar datos entre fragmentos
+     */
+
+    OnHeadlineSelectedListener mCallBack;
+
+    public interface OnHeadlineSelectedListener {
+        public void onListaObtenida(ArrayList<ArbeitDetail> lista);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallBack = (OnHeadlineSelectedListener) activity;
+        }catch (ClassCastException e){
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+    public void enviaAFragmento(ArrayList<ArbeitDetail> lista){
+
+//        GrabList gl = new GrabList();
+//
+//        gl.setGrabList(lista);
+        mCallBack.onListaObtenida(lista);
+
+    }
+
+    /**
+     * Fin codigo
+     */
+
+
 
 
     public ListadoDetailFragment() {
@@ -166,6 +205,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        enviaAFragmento(adaptadorDetalle.objetoArrayList);
         return false;
     }
 
@@ -218,6 +258,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
         protected void onPreExecute() {
             super.onPreExecute();
             mListaDetalle = new ArrayList<>();
+
             swipeRefreshLayout.setRefreshing(true);
 //            progress = new ProgressDialog(getContext());
 //            progress.setTitle("Server Verbindung");
@@ -258,6 +299,7 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
                 for (ArbeitDetail tl  : arbeitDetailobtenidos.getCurrentPage()){
                     mListaDetalle.add(tl);
 
+
 //                    progress.incrementProgressBy(1);
                 }
                 offset+=size;
@@ -266,6 +308,8 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
             }
 
 //            publishProgress();
+//            enviaAFragmento(mListaDetalle);
+
             return totalRegistro;
         }
 
@@ -293,6 +337,8 @@ public class ListadoDetailFragment extends Fragment implements SearchView.OnQuer
             tvTotalRegistro.setText(String.valueOf(totalRegistro));
             clickEnLista();
             setupSearchView();
+
+            enviaAFragmento(mListaDetalle);
 
         }
     }

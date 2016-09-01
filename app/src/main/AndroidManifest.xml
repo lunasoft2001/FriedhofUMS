@@ -58,6 +58,7 @@
         </receiver>
 
         <activity android:name=".actividades.ListadoTumbas">
+            android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         <activity android:name=".actividades.ListadoArbeit">
         </activity>
