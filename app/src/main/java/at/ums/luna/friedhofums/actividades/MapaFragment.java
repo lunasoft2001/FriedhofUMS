@@ -222,7 +222,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//        mMap.setMapType(mMapTypes[position]);
+        mMap.setMapType(mMapTypes[position]);
 
     }
 
@@ -230,10 +230,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-
-
-
 
     /**
      * recibe de la activity
