@@ -49,7 +49,7 @@ import at.ums.luna.friedhofums.servidor.OperacionesBaseDatos;
  * A simple {@link Fragment} subclass.
  */
 public class MapaFragment extends Fragment implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener, AdapterView.OnItemSelectedListener{
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener, AdapterView.OnItemSelectedListener {
 
     double miLatitud;
     double miLongitud;
@@ -106,9 +106,10 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
             return;
         }
         mMap.setMyLocationEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(miLatitud,miLongitud),20));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(miLatitud, miLongitud), 20));
         mMap.setOnMarkerDragListener(this);
 
         CameraPosition oldPos = mMap.getCameraPosition();
@@ -122,7 +123,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
     }
 
     public void actualizaMarcas() {
-        for (int x= 0; x<mListaTumbas.size();x++ ) {
+        for (int x = 0; x < mListaTumbas.size(); x++) {
             mMap.addMarker(agregarMarca(mListaTumbas.get(x)));
         }
     }
@@ -134,11 +135,11 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
             tocado.equals("NO");
 
             Intent intento = new Intent(getContext(), MiPosicion.class);
-            intento.putExtra("idGrab",marker.getTitle());
+            intento.putExtra("idGrab", marker.getTitle());
             startActivity(intento);
         } else {
             tocado = marker.getTitle();
-            Toast.makeText(getContext(),"Noch click für Detail sehen", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Noch click für Detail sehen", Toast.LENGTH_SHORT).show();
         }
 
         return false;
@@ -158,7 +159,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
             miLatitud = mListaTumbas.get(0).getLatitud();
             miLongitud = mListaTumbas.get(0).getLongitud();
         }
-
 
 
         mapFragment = (SupportMapFragment) this.getChildFragmentManager()
@@ -181,21 +181,20 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
     public void onMarkerDragEnd(final Marker marker) {
         //Mueve el marker de una tumba, lo guarda en sqLite y en el servidor
 
-        String codigoObtenido =  marker.getTitle();
-        double nuevaLatitud =  marker.getPosition().latitude;
+        String codigoObtenido = marker.getTitle();
+        double nuevaLatitud = marker.getPosition().latitude;
         double nuevaLongitud = marker.getPosition().longitude;
 
         try {
-            db.actualizaCoordenadasTumba(codigoObtenido,nuevaLatitud,nuevaLongitud);
-        }catch(Exception e){
+            db.actualizaCoordenadasTumba(codigoObtenido, nuevaLatitud, nuevaLongitud);
+        } catch (Exception e) {
             Log.i("MENSAJES", e.toString());
-            Toast.makeText(getContext(),"Error. Position nicht gespeichert",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error. Position nicht gespeichert", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-
-    public MarkerOptions agregarMarca(Grab grab){
+    public MarkerOptions agregarMarca(Grab grab) {
         MarkerOptions agregar = new MarkerOptions();
 
         agregar.position(new LatLng(grab.getLatitud(), grab.getLongitud()));
@@ -207,15 +206,15 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
         return agregar;
     }
 
-    public static int obtenerDistancia(double lat_a,double lng_a, double lat_b, double lon_b){
+    public static int obtenerDistancia(double lat_a, double lng_a, double lat_b, double lon_b) {
         double Radius = 6371000; //Radio de la tierra
         double lat1 = lat_a / 1E6;
         double lat2 = lat_b / 1E6;
         double lon1 = lng_a / 1E6;
         double lon2 = lon_b / 1E6;
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLon = Math.toRadians(lon2-lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon /2) * Math.sin(dLon/2);
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
         double c = 2 * Math.asin(Math.sqrt(a));
         return (int) (Radius * c);
 
@@ -223,7 +222,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mMap.setMapType(mMapTypes[position]);
+//        mMap.setMapType(mMapTypes[position]);
 
     }
 

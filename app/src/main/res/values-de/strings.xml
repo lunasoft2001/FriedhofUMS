@@ -13,6 +13,9 @@
     <string name="listado_de_tumbas">Grab Liste</string>
     <string name="MAPA">MAP</string>
     <string name="LISTA">LISTE</string>
+    <string name="Cancelar">ZURÜCK</string>
+    <string name="continuar">Weiter</string>
+    <string name="pass_false">Das Passowrt ist falsch</string>
 
 
 </resources>

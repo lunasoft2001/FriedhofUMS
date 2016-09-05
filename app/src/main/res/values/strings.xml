@@ -13,6 +13,9 @@
     <string name="listado_de_tumbas">Listado de Tumbas</string>
     <string name="MAPA">MAPA</string>
     <string name="LISTA">LISTA</string>
+    <string name="Cancelar">Cancelar</string>
+    <string name="continuar">Continuar</string>
+    <string name="pass_false">La constraseña es incorrecta</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
