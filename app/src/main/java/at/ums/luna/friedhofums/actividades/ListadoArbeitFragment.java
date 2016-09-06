@@ -49,6 +49,8 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
     private String[] argumentos;
     private SearchView mSearchView;
 
+    private String whereClause;
+
     public ListadoArbeitFragment() {
         // Required empty public constructor
     }
@@ -115,9 +117,17 @@ public class ListadoArbeitFragment extends Fragment implements SearchView.OnQuer
 
         String idTrabajadorActual = pref.getString("prefijo","?");
 
+        Log.i("MENSAJES", "idTrabajador = " + idTrabajadorActual);
 
-        String whereClause = "terminado = False and mitarbeiter = '" + idTrabajadorActual + "'";
-        whereClause = whereClause + " or terminado = False and mitarbeiter = ''";
+
+        if (idTrabajadorActual.equals("AK")){
+            Log.i("MENSAJES", "idTrabajador COINCIDE");
+            whereClause = "";
+        } else{
+            Log.i("MENSAJES", "idTrabajador NO COINCIDE");
+            whereClause = "terminado = False and mitarbeiter = '" + idTrabajadorActual + "'";
+            whereClause = whereClause + " or terminado = False and mitarbeiter = ''";
+        }
 
 
         final int PAGESIZE = 100;
