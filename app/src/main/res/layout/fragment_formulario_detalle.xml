@@ -6,13 +6,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView">
 
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="16dp"
+            android:paddingTop="4dp"
             android:layout_gravity="center_horizontal|top">
 
             <TextView
@@ -50,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:text="Ohne Bemerkung"
                 android:id="@+id/tvBemerkung"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:padding="4dp"
                 android:textStyle="bold|italic"
                 android:layout_below="@+id/tvFriedhof"
@@ -62,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:text="Detalle"
                 android:id="@+id/tvDetalle"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:padding="4dp"
                 android:textStyle="normal|bold"
                 android:layout_below="@+id/tvBemerkung"
@@ -72,7 +73,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:id="@+id/linLayBotones1"
                 android:orientation="horizontal"
                 android:gravity="center_horizontal"
@@ -108,7 +109,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:id="@+id/linLayBotones2"
                 android:layout_below="@+id/linLayBotones1"
                 android:orientation="horizontal"
@@ -146,7 +147,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:id="@+id/linLayBotones3"
                 android:layout_below="@+id/linLayBotones2"
                 android:orientation="horizontal"
@@ -165,11 +166,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:id="@+id/linLayBotones4"
                 android:layout_below="@+id/linLayBotones3"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/botonGuardar"
+                    android:text="SPEICHERN"
+                    android:layout_gravity="center_horizontal"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -185,13 +193,6 @@
                         android:inputType="textMultiLine"/>
 
                 </android.support.design.widget.TextInputLayout>
-
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/botonGuardar"
-                    android:text="SPEICHERN"/>
 
 
             </LinearLayout>

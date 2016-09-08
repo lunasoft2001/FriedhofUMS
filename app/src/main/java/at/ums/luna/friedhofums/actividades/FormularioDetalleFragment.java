@@ -1,6 +1,7 @@
 package at.ums.luna.friedhofums.actividades;
 
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
@@ -11,10 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import at.ums.luna.friedhofums.R;
@@ -51,6 +55,7 @@ public class FormularioDetalleFragment extends Fragment {
     private ImageButton decorar;
     private ImageButton pflege;
     private EditText observacionesMitarbeiter;
+    private ScrollView mScrollView;
 
     private String idRecoger;
     private String idTierra;
@@ -61,6 +66,42 @@ public class FormularioDetalleFragment extends Fragment {
     private String idPflege;
 
     private ArbeitDetail trabajoObtenido;
+
+
+    /**
+     * codigo para pasar datos entre fragmentos
+     */
+
+    OnHeadlineSelectedListener mCallBack;
+
+    public interface OnHeadlineSelectedListener {
+        public void onListaObtenida(ArrayList<ArbeitDetail> lista);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallBack = (OnHeadlineSelectedListener) activity;
+        }catch (ClassCastException e){
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+    public void enviaAFragmento(ArbeitDetail arbeit){
+
+        ArrayList<ArbeitDetail> lista = new ArrayList<ArbeitDetail>();
+        lista.add(arbeit);
+
+        mCallBack.onListaObtenida(lista);
+
+    }
+
+    /**
+     * Fin codigo
+     */
+
 
 
     public FormularioDetalleFragment() {
@@ -91,12 +132,15 @@ public class FormularioDetalleFragment extends Fragment {
         decorar = (ImageButton)viewFragmento.findViewById(R.id.botonDecorar);
         pflege = (ImageButton)viewFragmento.findViewById(R.id.botonPflege);
         observacionesMitarbeiter = (EditText)viewFragmento.findViewById(R.id.etObservacionMitarbeiter);
+        mScrollView = (ScrollView) viewFragmento.findViewById(R.id.scrollView);
 
         obtenerDatos();
+
 
         return viewFragmento;
 
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -113,6 +157,7 @@ public class FormularioDetalleFragment extends Fragment {
         getView().findViewById(R.id.botonGuardar).setOnClickListener(mGlobal_onClickListener);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 
     }
 
@@ -246,6 +291,8 @@ public class FormularioDetalleFragment extends Fragment {
                 limpiar.setAlpha(arbeitDetail.transparenciaTarea(idLimpiar));
                 decorar.setAlpha(arbeitDetail.transparenciaTarea(idDecorar));
                 pflege.setAlpha(arbeitDetail.transparenciaTarea(idPflege));
+
+                enviaAFragmento(arbeitDetail);
 
 
                 Log.i("MENSAJES", arbeitDetail.getDetalle());

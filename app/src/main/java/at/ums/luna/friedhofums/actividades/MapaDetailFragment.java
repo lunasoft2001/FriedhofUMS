@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.ums.luna.friedhofums.GPS.MiPosicion;
 import at.ums.luna.friedhofums.R;
 import at.ums.luna.friedhofums.modelo.ArbeitDetail;
 import at.ums.luna.friedhofums.modelo.Grab;
@@ -47,8 +48,9 @@ public class MapaDetailFragment extends Fragment implements OnMapReadyCallback,
     double miLongitud;
     private List<ArbeitDetail> mListaTumbas;
 
-    private String filtro;
-    private String[] argumentos;
+    //private String filtro;
+    //private String[] argumentos;
+    private String origen;
 
     private String tocado = "NO";
 
@@ -82,8 +84,9 @@ public class MapaDetailFragment extends Fragment implements OnMapReadyCallback,
         View view = inflater.inflate(R.layout.fragment_mapa_detail, null, false);
 
         db = new OperacionesBaseDatos(getContext());
-        filtro = getArguments().getString("filtro");
-        argumentos = getArguments().getStringArray("argumentos");
+        //filtro = getArguments().getString("filtro");
+        //argumentos = getArguments().getStringArray("argumentos");
+        origen = getArguments().getString("origen");
 
 
         mMapTypeSelector = (Spinner) view.findViewById(R.id.map_type_selector);
@@ -148,10 +151,19 @@ public class MapaDetailFragment extends Fragment implements OnMapReadyCallback,
         if (tocado.equals(marker.getTitle())) {
             tocado.equals("NO");
 
-            Intent intento = new Intent(getContext(), FormularioDetalle.class);
-            intento.putExtra("idGrab",detalleElegido.getIdGrab());
-            intento.putExtra("idObjeto",detalleElegido.getObjectId());
-            startActivity(intento);
+
+            if (origen.equals("listado")){
+                Intent intento = new Intent(getContext(), FormularioDetalle.class);
+                intento.putExtra("idGrab",detalleElegido.getIdGrab());
+                intento.putExtra("idObjeto",detalleElegido.getObjectId());
+                startActivity(intento);
+            } else {
+                Intent intento = new Intent(getContext(), MiPosicion.class);
+                intento.putExtra("idGrab", marker.getTitle());
+                startActivity(intento);
+            }
+
+
         } else {
             tocado = marker.getTitle();
             Toast.makeText(getContext(),"Noch click für Detail sehen", Toast.LENGTH_SHORT).show();

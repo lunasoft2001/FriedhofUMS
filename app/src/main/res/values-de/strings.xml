@@ -5,9 +5,9 @@
     <string name="nombre_trabajador">Name Mitarbeiter </string>
     <string name="id_trabajador">ID Mitarbeiter</string>
     <string name="summary_prefijo">2 Stellig am anfang des Angebotes</string>
-    <string name="summary_nombre">Nombre con el que se identificará al trabajador</string>
+    <string name="summary_nombre">NAmes des Mitarbiter</string>
     <string name="usuario">User</string>
-    <string name="summary_dato_administrador">dato proporcionado por el administrador del programa</string>
+    <string name="summary_dato_administrador">Fragen IT von Firma</string>
     <string name="password">Passwort</string>
     <string name="Trabajador">"Mitarbeiter:%s "</string>
     <string name="listado_de_tumbas">Grab Liste</string>

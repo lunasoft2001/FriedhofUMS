@@ -107,13 +107,13 @@ public class ListadoDetail extends AppCompatActivity implements ListadoDetailFra
             switch (MODO) {
                 case 1:
                     args.putString("filtro",null);
-                    args.putStringArray("argumentos",null);
                     args.putString("idTarea", idTarea);
+                    args.putString("origen", "listado");
                     break;
                 case 2:
                     args.putString("filtro", whereClause.toString());
-                    args.putStringArray("argumentos",null);
                     args.putString("idTarea", idTarea);
+                    args.putString("origen", "listado");
 
                     break;
             }

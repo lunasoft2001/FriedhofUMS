@@ -118,7 +118,7 @@ public class SplashActivity extends AppCompatActivity {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText etPassword = new EditText(SplashActivity.this);
 
-        etPassword.setHint("password");
+        etPassword.setHint(this.getString(R.string.password));
         etPassword.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         builder.setTitle(this.getString(R.string.password))
